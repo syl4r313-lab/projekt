@@ -1,0 +1,2762 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Eine Austauschplattform fuer Jugendliche aus 25 Laendern: gezeichnete Europakarte, Begegnungen, Aufgaben und ein getrennter Lehrkraefte-Zugang.">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#faf9f5" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1e242b" media="(prefers-color-scheme: dark)">
+<meta property="og:type" content="website">
+<meta property="og:title" content="hey EU — Europa im Skizzenbuch">
+<meta property="og:description" content="Eine Austauschplattform fuer Jugendliche aus 25 Laendern: gezeichnete Europakarte, Begegnungen, Aufgaben und ein getrennter Lehrkraefte-Zugang.">
+<meta property="og:locale" content="de_DE">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="6" fill="%23faf9f5"/><text x="32" y="41" font-family="Georgia,serif" font-size="27" font-weight="700" fill="%232f4f8f" text-anchor="middle">EU</text><path d="M13 49C26 45 43 45 51 49" stroke="%23cf4a37" stroke-width="4" fill="none" stroke-linecap="round"/></svg>">
+<style>body{margin:0}img{max-width:100%}</style>
+</head>
+<body>
+<title>hey EU — Europa im Skizzenbuch</title>
+
+<style>
+/* ============================================================
+   hey EU  ·  Skizzenbuch-Oberfläche
+   Grund: kariertes Heft mit roter Randlinie. Im dunklen Modus
+   wird daraus eine Schiefertafel mit Kreide.
+   Konturen sind echte gezeichnete Striche (SVG-Rauschfilter),
+   keine CSS-Rahmen.
+   ============================================================ */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+:root {
+  /* Papier & Tinte */
+  --paper:      #faf9f5;
+  --paper-2:    #f2f1ea;
+  --grid:       #d9e1ec;
+  --grid-bold:  #c6d3e4;
+  --ink:        #1c2530;
+  --ink-soft:   #5d6b7c;
+  --ink-faint:  #93a1b1;
+
+  /* Stifte */
+  --pen:        #2f4f8f;   /* Kugelschreiber blau */
+  --pen-light:  #6a8bc4;
+  --marker:     #ffd84d;   /* Textmarker */
+  --marker-soft: rgba(255, 216, 77, 0.55);
+  --red:        #cf4a37;   /* Rotstift / Randlinie */
+  --green:      #2f7a4f;   /* Korrektur: richtig */
+
+  --rule: rgba(28, 37, 48, 0.16);
+  --shadow: rgba(35, 45, 60, 0.13);
+  --shadow-2: rgba(35, 45, 60, 0.2);
+
+  --gap: clamp(1.2rem, 2.6vw, 2.1rem);
+
+  --f-display: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+  --f-body: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --f-note: ui-monospace, SFMono-Regular, "Cascadia Mono", "Segoe UI Mono", Consolas, monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper:      #1e242b;
+    --paper-2:    #262d36;
+    --grid:       #2c343d;
+    --grid-bold:  #37414c;
+    --ink:        #eceae1;
+    --ink-soft:   #a8b2bd;
+    --ink-faint:  #6d7885;
+    --pen:        #9fc2f2;
+    --pen-light:  #6f92c4;
+    --marker:     #ffe37a;
+    --marker-soft: rgba(255, 227, 122, 0.3);
+    --red:        #f08573;
+    --green:      #7fd0a2;
+    --rule: rgba(236, 234, 225, 0.16);
+    --shadow: rgba(0, 0, 0, 0.4);
+    --shadow-2: rgba(0, 0, 0, 0.55);
+  }
+}
+
+:root[data-theme="dark"] {
+  --paper:      #1e242b;
+  --paper-2:    #262d36;
+  --grid:       #2c343d;
+  --grid-bold:  #37414c;
+  --ink:        #eceae1;
+  --ink-soft:   #a8b2bd;
+  --ink-faint:  #6d7885;
+  --pen:        #9fc2f2;
+  --pen-light:  #6f92c4;
+  --marker:     #ffe37a;
+  --marker-soft: rgba(255, 227, 122, 0.3);
+  --red:        #f08573;
+  --green:      #7fd0a2;
+  --rule: rgba(236, 234, 225, 0.16);
+  --shadow: rgba(0, 0, 0, 0.4);
+  --shadow-2: rgba(0, 0, 0, 0.55);
+}
+
+:root[data-theme="light"] {
+  --paper:      #faf9f5;
+  --paper-2:    #f2f1ea;
+  --grid:       #d9e1ec;
+  --grid-bold:  #c6d3e4;
+  --ink:        #1c2530;
+  --ink-soft:   #5d6b7c;
+  --ink-faint:  #93a1b1;
+  --pen:        #2f4f8f;
+  --pen-light:  #6a8bc4;
+  --marker:     #ffd84d;
+  --marker-soft: rgba(255, 216, 77, 0.55);
+  --red:        #cf4a37;
+  --green:      #2f7a4f;
+  --rule: rgba(28, 37, 48, 0.16);
+  --shadow: rgba(35, 45, 60, 0.13);
+  --shadow-2: rgba(35, 45, 60, 0.2);
+}
+
+/* ---------- Das Heft ---------- */
+
+body {
+  margin: 0;
+  font-family: var(--f-body);
+  font-size: 16.5px;
+  line-height: 1.6;
+  color: var(--ink);
+  background-color: var(--paper);
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 26px 26px, 26px 26px;
+  overflow-x: hidden;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Die rote Randlinie des Schulheftes – links vom Inhalt, durchgehend */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0; bottom: 0;
+  left: max(1.4rem, calc(50% - 560px - 2.6rem));
+  width: 2px;
+  background: var(--red);
+  opacity: 0.55;
+  z-index: 1;
+  pointer-events: none;
+}
+@media (max-width: 700px) { body::before { display: none; } }
+
+.sheet { width: min(1120px, 100% - 3rem); margin-inline: auto; position: relative; z-index: 2; }
+
+/* ---------- Typografie ---------- */
+
+h1, h2, h3, h4 { margin: 0; font-family: var(--f-display); font-weight: 600; line-height: 1.12; text-wrap: balance; letter-spacing: -0.01em; }
+h2 { font-size: clamp(1.7rem, 3.6vw, 2.5rem); }
+h3 { font-size: 1.2rem; }
+h4 { font-size: 1rem; font-family: var(--f-body); font-weight: 700; }
+p { margin: 0; }
+a { color: var(--pen); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+
+.lead { font-size: 1.08rem; color: var(--ink-soft); max-width: 64ch; }
+.soft { color: var(--ink-soft); }
+.tiny { font-size: 0.86rem; }
+.hidden { display: none !important; }
+
+.note {
+  font-family: var(--f-note);
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Textmarker: fährt beim Überfahren über das Wort */
+.mark {
+  background-image: linear-gradient(var(--marker-soft), var(--marker-soft));
+  background-repeat: no-repeat;
+  background-position: 0 88%;
+  background-size: 0% 42%;
+  transition: background-size 0.45s cubic-bezier(.22,1,.36,1);
+  padding: 0 0.1em;
+}
+.mark.on, .lead:hover .mark, .marked .mark { background-size: 100% 42%; }
+
+/* ---------- Getuschte Kästen ---------- */
+
+.sketch { position: relative; }
+.sketch > .frame {
+  position: absolute;
+  inset: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  overflow: visible;
+  z-index: 0;
+}
+.sketch > .frame path { fill: none; stroke: var(--ink); stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; opacity: 0.85; }
+.sketch > :not(.frame) { position: relative; z-index: 1; }
+
+.card {
+  background: color-mix(in srgb, var(--paper) 88%, transparent);
+  padding: clamp(1.1rem, 2.4vw, 1.7rem);
+  border-radius: 3px;
+}
+.card.tilt { transition: transform 0.3s cubic-bezier(.22,1,.36,1), box-shadow 0.3s; will-change: transform; }
+
+.stack { display: flex; flex-direction: column; gap: var(--gap); }
+.row { display: flex; flex-wrap: wrap; gap: 0.6rem; align-items: center; }
+.split { display: grid; gap: var(--gap); grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; }
+.split.karte-split  { grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); }
+.split.leute-split  { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); }
+.split.filter-split { grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); }
+@media (max-width: 880px) {
+  .split, .split.karte-split, .split.leute-split, .split.filter-split { grid-template-columns: 1fr; }
+}
+
+section { scroll-margin-top: 6.5rem; }
+
+/* ---------- Kopfzeile ---------- */
+
+#bar {
+  position: sticky; top: 0; z-index: 40;
+  background: color-mix(in srgb, var(--paper) 90%, transparent);
+  backdrop-filter: blur(9px);
+  border-bottom: 1px solid var(--rule);
+}
+#bar .sheet { display: flex; align-items: center; gap: 0.6rem; padding: 0.6rem 0; }
+.bar-mark { font-family: var(--f-display); font-size: 1.2rem; font-weight: 600; white-space: nowrap; }
+.bar-mark i { font-style: normal; color: var(--pen); }
+.spacer { flex: 1; }
+
+
+.tally { display: inline-flex; align-items: baseline; gap: 0.35rem; font-family: var(--f-note); font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-soft); }
+.tally b { font-size: 1.05rem; color: var(--ink); font-variant-numeric: tabular-nums; }
+#tally-pts { transition: transform 0.25s cubic-bezier(.34,1.56,.64,1); display: inline-block; }
+#tally-pts.bump { transform: scale(1.5) rotate(-6deg); color: var(--green); }
+
+/* Rollen-Umschalter: zwei Karteireiter */
+.roles { display: inline-flex; gap: 2px; }
+.role-tab {
+  font-family: var(--f-note); font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase;
+  background: none; border: none; color: var(--ink-soft);
+  padding: 0.42rem 0.8rem; cursor: pointer; position: relative;
+  transition: color 0.2s;
+}
+.role-tab::after {
+  content: ""; position: absolute; left: 0.5rem; right: 0.5rem; bottom: 0.15rem; height: 2px;
+  background: var(--pen); transform: scaleX(0); transform-origin: left; transition: transform 0.3s cubic-bezier(.22,1,.36,1);
+}
+.role-tab:hover { color: var(--ink); }
+.role-tab:hover::after, .role-tab[aria-pressed="true"]::after { transform: scaleX(1); }
+.role-tab[aria-pressed="true"] { color: var(--ink); font-weight: 700; }
+@media (max-width: 560px) {
+  #bar .sheet { gap: 0.35rem; }
+  .bar-mark { font-size: 1rem; }
+  .role-tab { padding: 0.4rem 0.45rem; font-size: 0.62rem; letter-spacing: 0.06em; }
+  .tally { font-size: 0; letter-spacing: 0; }        /* nur die Zahl bleibt stehen */
+  .tally b { font-size: 1rem; }
+  .tally b::after { content: " P"; font-size: 0.7rem; }
+}
+
+
+/* ---------- Knöpfe ---------- */
+
+.btn {
+  font-family: var(--f-body); font-weight: 600; font-size: 0.95rem;
+  color: var(--paper); background: var(--ink);
+  border: none; border-radius: 2px;
+  padding: 0.58rem 1.15rem; cursor: pointer;
+  transition: transform 0.15s, background 0.2s, box-shadow 0.2s;
+  box-shadow: 2px 2px 0 var(--shadow);
+}
+.btn:hover { transform: translate(-1px, -1px); box-shadow: 4px 4px 0 var(--shadow); }
+.btn:active { transform: translate(1px, 1px); box-shadow: 1px 1px 0 var(--shadow); }
+.btn.pen { background: var(--pen); }
+.btn.ok { background: var(--green); }
+.btn.no { background: var(--red); }
+.btn.ghost { background: none; color: var(--ink); box-shadow: none; text-decoration: underline; text-decoration-style: dotted; text-underline-offset: 4px; }
+.btn.ghost:hover { color: var(--pen); box-shadow: none; }
+.btn.small { font-size: 0.85rem; padding: 0.4rem 0.85rem; }
+.btn:disabled { opacity: 0.42; cursor: not-allowed; transform: none; }
+
+.chip {
+  font-family: var(--f-body); font-size: 0.87rem; font-weight: 500; color: var(--ink);
+  background: none; border: 1px solid var(--rule); border-radius: 999px;
+  padding: 0.3rem 0.8rem; cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, transform 0.15s, color 0.2s;
+}
+.chip:hover { border-color: var(--pen); transform: translateY(-2px); }
+.chip[aria-pressed="true"] { background: var(--marker); border-color: var(--marker); color: #3d3000; font-weight: 600; }
+
+:where(button, a, input, select, textarea, [tabindex]):focus-visible {
+  outline: 2px dashed var(--pen); outline-offset: 3px;
+}
+
+/* ---------- Felder ---------- */
+
+.field { display: flex; flex-direction: column; gap: 0.3rem; }
+.field > label { font-family: var(--f-note); font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-faint); }
+input[type="text"], input[type="password"], input[type="number"], select, textarea {
+  width: 100%; padding: 0.5rem 0.1rem;
+  font-family: var(--f-body); font-size: 1rem; color: var(--ink);
+  background: none; border: none; border-bottom: 1.5px solid var(--rule); border-radius: 0;
+  transition: border-color 0.2s;
+}
+select { padding-inline: 0.2rem; }
+input:focus, select:focus, textarea:focus { outline: none; border-bottom-color: var(--pen); }
+textarea { border: 1.5px solid var(--rule); border-radius: 3px; padding: 0.6rem 0.7rem; resize: vertical; }
+textarea:focus { border-color: var(--pen); }
+.hint { font-size: 0.82rem; min-height: 1.25em; color: var(--ink-soft); }
+.hint.bad { color: var(--red); font-weight: 600; }
+.hint.good { color: var(--green); font-weight: 600; }
+
+/* ---------- Titelseite ---------- */
+
+#hero { padding: clamp(2.4rem, 7vw, 5rem) 0 clamp(1.6rem, 4vw, 3rem); }
+.hero-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 0.82fr); gap: var(--gap); align-items: center; }
+@media (max-width: 880px) { .hero-grid { grid-template-columns: 1fr; } }
+
+#wordmark { display: block; width: min(100%, 470px); height: auto; overflow: visible; }
+#wordmark path { fill: none; stroke: var(--ink); stroke-width: 5; stroke-linecap: round; stroke-linejoin: round; }
+#wordmark .accent { stroke: var(--pen); }
+#wordmark .swash { stroke: var(--red); stroke-width: 3.5; }
+.draw { stroke-dasharray: var(--len); stroke-dashoffset: var(--len); animation: draw 1.5s cubic-bezier(.5,.1,.3,1) forwards; }
+@keyframes draw { to { stroke-dashoffset: 0; } }
+
+.hero-sub { margin-top: 1.3rem; font-size: clamp(1.05rem, 2vw, 1.25rem); max-width: 48ch; color: var(--ink-soft); }
+.hero-actions { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 1.5rem; }
+
+.hero-figures { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.4rem; }
+.hero-figures figure { margin: 0; display: grid; place-items: center; gap: 0.2rem; cursor: default; }
+.hero-figures svg { width: 100%; height: auto; overflow: visible; }
+.hero-figures figcaption { font-family: var(--f-note); font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint); }
+
+/* ---------- Abschnittsköpfe mit Randnummer ---------- */
+
+.head { display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1.1rem; }
+.head-no {
+  flex: none; margin-top: 0.35rem;
+  font-family: var(--f-note); font-size: 0.72rem; letter-spacing: 0.12em;
+  color: var(--red); width: 2.4rem;
+}
+.head-txt { flex: 1; min-width: 0; }
+.head h2 { position: relative; display: inline-block; }
+/* Beim Überfahren wird die Überschrift eingekringelt */
+.head h2 .circle { position: absolute; left: -8%; top: -22%; width: 116%; height: 150%; pointer-events: none; overflow: visible; }
+.head h2 .circle path { fill: none; stroke: var(--red); stroke-width: 2; stroke-linecap: round; opacity: 0.75; stroke-dasharray: var(--len); stroke-dashoffset: var(--len); transition: stroke-dashoffset 0.7s cubic-bezier(.22,1,.36,1); }
+.head:hover h2 .circle path, .head.seen h2 .circle path { stroke-dashoffset: 0; }
+
+/* ---------- Karte ---------- */
+
+.map-wrap { position: relative; }
+#map { display: block; width: 100%; height: auto; cursor: crosshair; touch-action: pan-y; }
+#map-tip {
+  position: absolute; z-index: 5; pointer-events: none;
+  background: var(--ink); color: var(--paper);
+  padding: 0.35rem 0.65rem; border-radius: 2px;
+  font-size: 0.85rem; font-weight: 600; white-space: nowrap;
+  transform: translate(-50%, -145%);
+  box-shadow: 2px 2px 0 var(--shadow-2);
+}
+#map-tip em { display: block; font-style: normal; font-family: var(--f-note); font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.7; }
+.map-side { display: flex; flex-direction: column; gap: 0.9rem; }
+.coords { font-family: var(--f-note); font-size: 0.72rem; letter-spacing: 0.1em; color: var(--ink-faint); font-variant-numeric: tabular-nums; }
+
+.dossier { min-height: 260px; }
+.dossier .flagline { display: flex; align-items: baseline; gap: 0.55rem; }
+.dossier .flagline .fl { font-size: 1.7rem; line-height: 1; }
+.dossier dl { display: grid; grid-template-columns: 8.5rem 1fr; gap: 0.35rem 0.8rem; margin: 0.9rem 0 0; font-size: 0.93rem; }
+.dossier dt { font-family: var(--f-note); font-size: 0.66rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-faint); padding-top: 0.25rem; }
+.dossier dd { margin: 0; }
+@media (max-width: 480px) { .dossier dl { grid-template-columns: 1fr; gap: 0 0; } .dossier dd { margin-bottom: 0.5rem; } }
+
+/* ---------- Profile ---------- */
+
+.people {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(158px, 1fr)); gap: 0.7rem;
+  max-height: 62vh; overflow-y: auto; overflow-x: hidden;
+  padding: 0.3rem 0.4rem 2.2rem 0.3rem;
+}
+.person {
+  position: relative; text-align: left; font-family: inherit; color: inherit;
+  background: var(--paper); padding: 0.8rem 0.85rem 0.85rem; cursor: pointer;
+  display: flex; flex-direction: column; gap: 0.25rem;
+  transition: transform 0.25s cubic-bezier(.22,1,.36,1);
+}
+.person:hover, .person:focus-visible, .person.open { transform: translateY(-5px) rotate(-0.7deg); z-index: 4; }
+.person .por { width: 58px; height: 58px; overflow: visible; }
+.person .name { font-weight: 700; font-size: 0.96rem; }
+.person .where { font-family: var(--f-note); font-size: 0.62rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint); line-height: 1.4; }
+/* Der Steckbrief klappt nicht auf, er wird als Randnotiz danebengelegt –
+   so verschiebt sich beim Überfahren nichts. */
+.person .say {
+  position: absolute; left: 0.4rem; right: 0.4rem; top: calc(100% + 6px); z-index: 5;
+  background: var(--paper); border-left: 2px solid var(--pen);
+  padding: 0.5rem 0.6rem;
+  font-size: 0.8rem; color: var(--ink-soft); line-height: 1.4;
+  box-shadow: 3px 3px 0 var(--shadow);
+  opacity: 0; transform: translateY(-6px); pointer-events: none;
+  transition: opacity 0.22s, transform 0.22s cubic-bezier(.22,1,.36,1);
+}
+.person:hover .say, .person:focus-visible .say, .person.open .say { opacity: 1; transform: none; }
+.person .tag { position: absolute; top: 0.55rem; right: 0.6rem; font-family: var(--f-note); font-size: 0.56rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--red); }
+.talk { position: sticky; top: 5rem; }
+@media (max-width: 880px) { .talk { position: static; } .people { max-height: 46vh; } }
+
+/* ---------- Gespräch ---------- */
+
+.talk { display: flex; flex-direction: column; min-height: 400px; }
+.talk-head { display: flex; align-items: center; gap: 0.7rem; padding-bottom: 0.7rem; border-bottom: 1px solid var(--rule); }
+.talk-head svg { width: 42px; height: 42px; flex: none; overflow: visible; }
+.talk-log { flex: 1; display: flex; flex-direction: column; gap: 0.5rem; padding: 0.9rem 0; overflow-y: auto; max-height: 280px; }
+.said { max-width: 84%; padding: 0.5rem 0.8rem; font-size: 0.94rem; line-height: 1.45; border-radius: 3px; animation: rise 0.22s ease-out; }
+@keyframes rise { from { transform: translateY(6px); opacity: 0; } to { transform: none; opacity: 1; } }
+.said.me { align-self: flex-end; background: var(--pen); color: #fff; }
+.said.them { align-self: flex-start; background: var(--paper-2); border: 1px solid var(--rule); }
+.said.typing { color: var(--ink-faint); letter-spacing: 4px; }
+.said.sys { align-self: center; background: none; color: var(--ink-faint); font-family: var(--f-note); font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; }
+.talk-quick { display: flex; flex-wrap: wrap; gap: 0.4rem; padding-bottom: 0.7rem; }
+.talk-form { display: flex; gap: 0.5rem; align-items: flex-end; border-top: 1px solid var(--rule); padding-top: 0.7rem; }
+/* min-width:0 – sonst schiebt die Mindestbreite des Eingabefelds den Knopf aus der Seite */
+.talk-form .field { flex: 1; min-width: 0; }
+.talk-form .btn { flex: none; }
+
+/* ---------- Aufgaben: Zettel an der Wand ---------- */
+
+.notes { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 1rem; }
+.sticky {
+  position: relative;
+  background: var(--paper-2);
+  padding: 1rem 1rem 0.9rem;
+  display: flex; flex-direction: column; gap: 0.45rem;
+  box-shadow: 2px 3px 0 var(--shadow);
+  transition: transform 0.28s cubic-bezier(.22,1,.36,1), box-shadow 0.28s;
+}
+.sticky:nth-child(3n) { transform: rotate(0.8deg); }
+.sticky:nth-child(3n+2) { transform: rotate(-1deg); }
+.sticky:hover { transform: rotate(0deg) translateY(-6px) scale(1.02); box-shadow: 5px 8px 0 var(--shadow); z-index: 3; }
+.sticky h4 { font-size: 1.02rem; }
+.sticky p { font-size: 0.88rem; color: var(--ink-soft); line-height: 1.45; }
+.sticky .foot { margin-top: auto; display: flex; flex-wrap: wrap; gap: 0.45rem; align-items: center; padding-top: 0.35rem; }
+.sticky .pin { position: absolute; top: -7px; left: 50%; transform: translateX(-50%); width: 14px; height: 14px; border-radius: 50%; background: var(--red); box-shadow: 0 1px 0 rgba(0,0,0,0.25); }
+.sticky .by { font-family: var(--f-note); font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint); }
+
+.badge { font-family: var(--f-note); font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 700; padding: 0.25rem 0.55rem; border: 1px solid currentColor; border-radius: 2px; }
+.badge.wait { color: #9a7100; }
+.badge.ok { color: var(--green); }
+.badge.no { color: var(--red); }
+
+/* ---------- Eingereichtes ---------- */
+
+.entries { display: grid; gap: 0.7rem; }
+.entry { display: flex; flex-direction: column; gap: 0.4rem; padding: 0.85rem 0.95rem; background: color-mix(in srgb, var(--paper-2) 60%, transparent); }
+.entry .meta { font-family: var(--f-note); font-size: 0.64rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint); }
+.entry img { display: block; width: 100%; max-height: 200px; object-fit: cover; border-radius: 2px; }
+.entry .acts { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.2rem; }
+.filebtn { display: inline-block; padding: 0.45rem 0.9rem; border: 1.5px dashed var(--rule); border-radius: 2px; font-size: 0.88rem; color: var(--ink-soft); cursor: pointer; transition: border-color 0.2s, color 0.2s; }
+.filebtn:hover { border-color: var(--pen); color: var(--pen); }
+.filebtn input { display: none; }
+#sub-preview { max-width: 200px; border: 1px solid var(--rule); border-radius: 2px; }
+
+/* ---------- Schloss / Zugang ---------- */
+
+.lock { display: flex; flex-direction: column; align-items: flex-start; gap: 0.8rem; }
+.lock svg { width: 54px; height: 54px; overflow: visible; }
+.lock svg path, .lock svg rect, .lock svg circle { fill: none; stroke: var(--ink-soft); stroke-width: 2; stroke-linecap: round; }
+#pin { width: 7em; letter-spacing: 0.5em; font-family: var(--f-note); font-size: 1.2rem; text-align: center; }
+
+/* ---------- Wortfilter ---------- */
+
+.verdict { display: flex; align-items: center; gap: 0.7rem; padding: 0.7rem 0.9rem; font-weight: 600; border-left: 3px solid var(--ink-faint); }
+.verdict.ok { border-left-color: var(--green); color: var(--green); }
+.verdict.no { border-left-color: var(--red); color: var(--red); }
+.verdict.idle { color: var(--ink-faint); }
+.trace { display: grid; gap: 0.3rem; margin-top: 0.8rem; }
+.trace-row { display: grid; grid-template-columns: 10.5rem 1fr; gap: 0.7rem; align-items: baseline; }
+.trace-row span { font-family: var(--f-note); font-size: 0.64rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-faint); }
+.trace-row code { font-family: var(--f-note); font-size: 0.84rem; word-break: break-all; }
+@media (max-width: 560px) { .trace-row { grid-template-columns: 1fr; gap: 0; } }
+
+/* ---------- Nachricht unten ---------- */
+
+#toast {
+  position: fixed; left: 50%; bottom: 1.4rem; z-index: 80;
+  transform: translateX(-50%);
+  background: var(--ink); color: var(--paper);
+  padding: 0.7rem 1.2rem; border-radius: 2px;
+  font-size: 0.93rem; font-weight: 500;
+  max-width: min(90vw, 440px); text-align: center;
+  box-shadow: 3px 3px 0 var(--shadow-2);
+  pointer-events: none;
+}
+#toast.pop { animation: toastIn 0.3s cubic-bezier(.34,1.56,.64,1); }
+@keyframes toastIn { from { transform: translate(-50%, 20px); opacity: 0; } to { transform: translate(-50%, 0); opacity: 1; } }
+
+footer { padding: 3rem 0 4rem; color: var(--ink-soft); font-size: 0.9rem; }
+footer .sheet { display: flex; flex-wrap: wrap; gap: 1rem 2rem; align-items: baseline; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
+  .draw { stroke-dashoffset: 0; }
+}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="rough" x="-6%" y="-6%" width="112%" height="112%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.022" numOctaves="3" seed="7" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="2.4" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <filter id="rough-hard" x="-8%" y="-8%" width="116%" height="116%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="4" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+</svg>
+
+<header id="bar">
+  <div class="sheet">
+    <span class="bar-mark">hey <i>EU</i></span>
+    <span class="spacer"></span>
+    <div class="roles" role="group" aria-label="Zugang wählen">
+      <button class="role-tab" id="tab-student" aria-pressed="true">Schüler:in</button>
+      <button class="role-tab" id="tab-teacher" aria-pressed="false">Lehrkraft</button>
+    </div>
+    <span class="tally" title="Gesammelte Punkte"><b id="tally-pts">0</b> Punkte</span>
+  </div>
+</header>
+
+<main>
+
+<!-- ============ Titelseite ============ -->
+<section id="hero">
+  <div class="sheet hero-grid">
+    <div>
+      <svg id="wordmark" viewBox="0 0 460 150" role="img" aria-label="hey EU">
+        <!-- h -->
+        <path class="ink" d="M14 22 C12 55, 13 92, 16 122"/>
+        <path class="ink" d="M16 78 C30 58, 58 55, 62 76 C65 92, 61 108, 62 122"/>
+        <!-- e -->
+        <path class="ink" d="M86 100 C104 98, 122 96, 130 90 C136 85, 130 73, 116 74 C98 76, 84 92, 88 108 C92 122, 116 124, 132 114"/>
+        <!-- y -->
+        <path class="ink" d="M152 74 C156 92, 164 108, 174 114 C184 108, 190 90, 194 72"/>
+        <path class="ink" d="M194 72 C190 104, 184 132, 168 140 C160 144, 152 141, 149 135"/>
+        <!-- E -->
+        <path class="accent" d="M246 26 C244 58, 245 94, 248 122"/>
+        <path class="accent" d="M248 26 C272 22, 298 22, 316 25"/>
+        <path class="accent" d="M247 72 C266 69, 288 69, 302 71"/>
+        <path class="accent" d="M248 122 C273 125, 300 125, 318 121"/>
+        <!-- U -->
+        <path class="accent" d="M348 26 C346 60, 346 92, 356 111 C368 132, 400 132, 411 110 C419 93, 418 58, 416 26"/>
+        <!-- Unterstreichung mit Rotstift -->
+        <path class="swash" d="M240 140 C284 133, 350 132, 424 138"/>
+        <path class="swash" d="M244 146 C290 141, 356 140, 420 144" style="opacity:.5"/>
+      </svg>
+
+      <p class="hero-sub">Eine Austauschplattform für Jugendliche aus <span class="mark">25 Ländern</span>.
+        Du legst ein Profil an, läufst über die Karte, triffst Leute, die dort zur Schule gehen,
+        und bearbeitest <span class="mark">Aufgaben</span>, die eure Lehrkräfte einstellen.</p>
+
+      <div class="hero-actions">
+        <button class="btn pen" data-goto="#profil">Profil anlegen</button>
+        <button class="btn ghost" data-goto="#karte">Zur Karte</button>
+        <button class="btn ghost" data-goto="#lehrkraft">Lehrkräfte-Zugang</button>
+      </div>
+
+      <p class="note" style="margin-top:1.6rem">Alles läuft in deinem Browser · nichts wird gesendet</p>
+    </div>
+
+    <div class="sketch card tilt" id="hero-card">
+      <p class="note">Wer gerade online ist</p>
+      <div class="hero-figures" id="hero-figures"></div>
+      <p class="tiny soft" style="margin-top:0.9rem">Fahr mit der Maus über die Karte, über Profile,
+        über Überschriften — fast alles auf dieser Seite reagiert.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 01 Profil ============ -->
+<section id="profil" class="sheet" style="padding-bottom:var(--gap)">
+  <div class="head">
+    <span class="head-no">01</span>
+    <div class="head-txt">
+      <h2>Dein Profil</h2>
+      <p class="lead">So sehen dich die anderen. Der Name wird geprüft, bevor er sichtbar wird —
+        das ist derselbe <span class="mark">Filter</span>, der später auch auf Nachrichten und Beiträge läuft.</p>
+    </div>
+  </div>
+
+  <div class="split">
+    <div class="sketch card">
+      <div class="stack" style="gap:1rem">
+        <div class="field">
+          <label for="me-name">Anzeigename</label>
+          <input type="text" id="me-name" maxlength="18" placeholder="Wie sollen dich die anderen nennen?" autocomplete="off">
+          <p class="hint" id="me-name-hint"></p>
+        </div>
+        <div class="row" style="gap:1rem; align-items:flex-end">
+          <div class="field" style="flex:1; min-width:150px">
+            <label for="me-country">Land</label>
+            <select id="me-country"></select>
+          </div>
+          <div class="field" style="width:90px">
+            <label for="me-age">Alter</label>
+            <input type="number" id="me-age" min="13" max="20" value="16">
+          </div>
+        </div>
+        <div class="field">
+          <label>Interessen — bis zu vier</label>
+          <div class="row" id="me-tags"></div>
+        </div>
+        <div class="field">
+          <label>Stiftfarbe</label>
+          <div class="row" id="me-colors"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sketch card" id="me-preview-card">
+      <p class="note">Vorschau</p>
+      <div class="row" style="gap:1.1rem; align-items:flex-start; margin-top:0.7rem">
+        <svg id="me-portrait" width="112" height="112" viewBox="0 0 100 100" style="overflow:visible;flex:none"></svg>
+        <div style="flex:1;min-width:160px">
+          <h3 id="me-shown-name">Noch kein Name</h3>
+          <p class="note" id="me-shown-where">—</p>
+          <p class="tiny soft" id="me-shown-tags" style="margin-top:0.5rem">Wähle ein paar Interessen aus.</p>
+        </div>
+      </div>
+      <p class="tiny soft" style="margin-top:1rem">Fahr über das Porträt — es schaut zurück.</p>
+      <div class="row" style="margin-top:1rem">
+        <button class="btn small" id="me-shuffle">Anderes Gesicht</button>
+        <button class="btn small pen" id="me-save">Profil übernehmen</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 02 Karte ============ -->
+<section id="karte" class="sheet" style="padding-bottom:var(--gap)">
+  <div class="head">
+    <span class="head-no">02</span>
+    <div class="head-txt">
+      <h2>Die Karte</h2>
+      <p class="lead">Dieselben Kartendaten wie im Spiel, hier von Hand gezeichnet.
+        Fahr über ein Land — es wird <span class="mark">schraffiert</span>. Klick es an, dann öffnet sich der Steckbrief.
+        Mit den Pfeiltasten läuft deine Figur über den Kontinent.</p>
+    </div>
+  </div>
+
+  <div class="split karte-split">
+    <div>
+      <div class="sketch card map-wrap" style="padding:0.8rem">
+        <canvas id="map" width="920" height="760" tabindex="0"
+          aria-label="Karte von Europa. Mit den Pfeiltasten bewegst du deine Figur."></canvas>
+        <div id="map-tip" class="hidden"></div>
+      </div>
+      <div class="row" style="justify-content:space-between; margin-top:0.6rem">
+        <span class="coords" id="map-coords">— · —</span>
+        <span class="note" id="map-where">Klick auf die Karte, um zu laufen</span>
+      </div>
+    </div>
+
+    <div class="map-side">
+      <div class="sketch card dossier" id="dossier"></div>
+      <div class="sketch card">
+        <p class="note">Fortschritt</p>
+        <p style="margin-top:0.4rem"><b id="seen-count">0</b> von 25 Ländern besucht.
+          Jedes Wahrzeichen, an dem du stehst, zählt.</p>
+        <p class="tiny soft" style="margin-top:0.4rem" id="seen-list">Noch keins.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 03 Leute ============ -->
+<section id="leute" class="sheet" style="padding-bottom:var(--gap)">
+  <div class="head">
+    <span class="head-no">03</span>
+    <div class="head-txt">
+      <h2>Leute treffen</h2>
+      <p class="lead">25 Jugendliche, einer pro Land, dazu die Lehrkräfte, die hier moderieren.
+        Fahr über eine Karte — sie erzählt schon mal den Anfang. Klick sie an, um zu schreiben.</p>
+    </div>
+  </div>
+
+  <div class="split leute-split">
+    <div class="sketch card">
+      <div class="row" style="justify-content:space-between; margin-bottom:0.8rem">
+        <p class="note">Verzeichnis</p>
+        <div class="row" style="gap:0.35rem">
+          <button class="chip" data-filter="alle" aria-pressed="true">Alle</button>
+          <button class="chip" data-filter="schueler" aria-pressed="false">Schüler:innen</button>
+          <button class="chip" data-filter="lehr" aria-pressed="false">Lehrkräfte</button>
+        </div>
+      </div>
+      <div class="people" id="people"></div>
+    </div>
+
+    <div class="sketch card talk" id="talk">
+      <div class="talk-head" id="talk-head">
+        <svg viewBox="0 0 100 100" id="talk-face"></svg>
+        <div>
+          <h3 id="talk-name">Niemand ausgewählt</h3>
+          <p class="note" id="talk-where">Wähle links jemanden aus</p>
+        </div>
+      </div>
+      <div class="talk-log" id="talk-log">
+        <p class="said sys">Jedes Gespräch beginnt mit „hey EU“</p>
+        <p class="tiny soft" style="align-self:center;max-width:34ch;text-align:center">
+          Alle hier sind zwischen 16 und 18 und gehen in ihrem Land zur Schule.
+          Du kannst die Vorschläge anklicken oder frei schreiben — der Wortfilter läuft mit.</p>
+      </div>
+      <div class="talk-quick" id="talk-quick"></div>
+      <form class="talk-form" id="talk-form">
+        <div class="field">
+          <label for="talk-input">Deine Nachricht</label>
+          <input type="text" id="talk-input" maxlength="160" placeholder="Schreib etwas…" autocomplete="off" disabled>
+        </div>
+        <button class="btn pen" type="submit" id="talk-send" disabled>Senden</button>
+      </form>
+      <p class="hint" id="talk-hint"></p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 04 Aufgaben ============ -->
+<section id="aufgaben" class="sheet" style="padding-bottom:var(--gap)">
+  <div class="head">
+    <span class="head-no">04</span>
+    <div class="head-txt">
+      <h2>Aufgaben</h2>
+      <p class="lead">Lehrkräfte stellen hier Aufgaben ein, ihr bearbeitet sie. Jeder Beitrag geht
+        erst in die <span class="mark">Prüfung</span> und wird danach für alle sichtbar.</p>
+    </div>
+  </div>
+
+  <div class="stack">
+    <div class="row" style="justify-content:space-between">
+      <p class="note" id="tasks-count">—</p>
+      <button class="btn small pen hidden" id="new-task-btn">Neue Aufgabe einstellen</button>
+    </div>
+
+    <div class="notes" id="tasks"></div>
+
+    <!-- Formular: Beitrag einreichen -->
+    <div class="sketch card hidden" id="submit-card">
+      <div class="row" style="justify-content:space-between; align-items:flex-start">
+        <div>
+          <p class="note">Beitrag einreichen</p>
+          <h3 id="submit-title" style="margin-top:0.2rem">—</h3>
+        </div>
+        <button class="btn ghost small" id="submit-cancel">Abbrechen</button>
+      </div>
+      <p class="tiny soft" id="submit-desc" style="margin-top:0.4rem"></p>
+      <div class="stack" style="gap:0.7rem; margin-top:0.9rem">
+        <div class="field">
+          <label for="submit-text">Dein Text</label>
+          <textarea id="submit-text" rows="4" maxlength="700" placeholder="Schreib deinen Beitrag…"></textarea>
+        </div>
+        <div class="row">
+          <label class="filebtn">Bild anhängen<input type="file" id="submit-photo" accept="image/*"></label>
+          <img id="sub-preview" class="hidden" alt="Vorschau des angehängten Bildes">
+        </div>
+        <p class="hint" id="submit-hint"></p>
+        <div class="row">
+          <button class="btn pen" id="submit-send">Zur Prüfung schicken</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="sketch card">
+      <p class="note">Freigegebene Beiträge</p>
+      <div class="entries" id="published" style="margin-top:0.8rem"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 05 Lehrkräfte ============ -->
+<section id="lehrkraft" class="sheet" style="padding-bottom:var(--gap)">
+  <div class="head">
+    <span class="head-no">05</span>
+    <div class="head-txt">
+      <h2>Lehrkräfte-Bereich</h2>
+      <p class="lead">Getrennt vom Schüler:innen-Zugang. Hier werden Aufgaben eingestellt und
+        eingereichte Beiträge geprüft, bevor sie jemand zu sehen bekommt.</p>
+    </div>
+  </div>
+
+  <!-- Schloss -->
+  <div class="sketch card" id="lock-card">
+    <div class="lock">
+      <svg viewBox="0 0 60 60" aria-hidden="true" id="lock-icon">
+        <rect x="12" y="26" width="36" height="26" rx="3"/>
+        <path d="M20 26 C20 14, 40 14, 40 26" id="lock-shackle"/>
+        <circle cx="30" cy="37" r="3.5"/>
+        <path d="M30 40.5 L30 45"/>
+      </svg>
+      <div>
+        <h3>Zugang für Lehrkräfte</h3>
+        <p class="tiny soft" style="margin-top:0.25rem">Demo-PIN dieser Seite: <b>2468</b></p>
+      </div>
+      <div class="row" style="align-items:flex-end">
+        <div class="field">
+          <label for="pin">PIN</label>
+          <input type="password" id="pin" inputmode="numeric" maxlength="8" placeholder="••••" autocomplete="off">
+        </div>
+        <button class="btn pen" id="pin-ok">Öffnen</button>
+      </div>
+      <p class="hint" id="pin-hint"></p>
+    </div>
+  </div>
+
+  <!-- Geöffnet -->
+  <div class="stack hidden" id="teacher-area">
+    <div class="sketch card">
+      <div class="row" style="justify-content:space-between">
+        <div>
+          <p class="note">Angemeldet als Lehrkraft</p>
+          <h3 style="margin-top:0.2rem">Aufgabe einstellen</h3>
+        </div>
+        <button class="btn ghost small" id="teacher-out">Abmelden</button>
+      </div>
+      <div class="stack" style="gap:0.8rem; margin-top:1rem">
+        <div class="split" style="gap:1rem">
+          <div class="field">
+            <label for="nt-title">Titel</label>
+            <input type="text" id="nt-title" maxlength="70" placeholder="z. B. Interview mit einer Nachbarin">
+          </div>
+          <div class="field">
+            <label for="nt-country">Gilt für</label>
+            <select id="nt-country"></select>
+          </div>
+        </div>
+        <div class="field">
+          <label for="nt-desc">Aufgabenstellung</label>
+          <textarea id="nt-desc" rows="3" maxlength="500" placeholder="Was sollen die Jugendlichen tun?"></textarea>
+        </div>
+        <div class="row" style="align-items:flex-end; gap:1rem">
+          <div class="field" style="width:110px">
+            <label for="nt-points">Punkte</label>
+            <input type="number" id="nt-points" min="1" max="20" value="5">
+          </div>
+          <button class="btn pen" id="nt-add">Aufgabe veröffentlichen</button>
+        </div>
+        <p class="hint" id="nt-hint"></p>
+      </div>
+    </div>
+
+    <div class="sketch card">
+      <div class="row" style="justify-content:space-between">
+        <h3>Prüfung</h3>
+        <span class="note" id="review-count">—</span>
+      </div>
+      <div class="entries" id="review" style="margin-top:0.9rem"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 06 Wortfilter ============ -->
+<section id="filter" class="sheet" style="padding-bottom:var(--gap)">
+  <div class="head">
+    <span class="head-no">06</span>
+    <div class="head-txt">
+      <h2>Was der Filter macht</h2>
+      <p class="lead">Namen, Nachrichten und Beiträge laufen durch dieselbe Prüfung.
+        Tipp etwas ein und sieh zu, wie der Text zerlegt wird — Verschleierungen mit Zahlen,
+        Leerzeichen oder gedehnten Buchstaben fallen dabei auf.</p>
+    </div>
+  </div>
+
+  <div class="split filter-split">
+    <div class="sketch card">
+      <div class="field">
+        <label for="filter-in">Testtext</label>
+        <input type="text" id="filter-in" maxlength="90" placeholder="Schreib etwas zum Prüfen…" autocomplete="off">
+      </div>
+      <div class="verdict idle" id="filter-verdict" style="margin-top:1rem">
+        <span>·</span><span>Noch nichts eingegeben</span>
+      </div>
+      <div class="row" style="margin-top:0.9rem" id="filter-samples"></div>
+    </div>
+
+    <div class="sketch card">
+      <p class="note">Zerlegung</p>
+      <div class="trace" id="filter-trace"></div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="sheet">
+    <span class="note">hey EU · Skizze einer Austauschplattform</span>
+    <span class="spacer"></span>
+    <span class="tiny soft">Daten liegen nur lokal in deinem Browser.
+      <button class="btn ghost small" id="reset-all">Alles zurücksetzen</button></span>
+  </div>
+</footer>
+
+<div id="toast" class="hidden" role="status" aria-live="polite"></div>
+
+<script>
+/* ============================================================
+   hey EU · Daten
+   Kartenraster und Wortfilter stammen unverändert aus dem
+   Spiel-Artefakt. Die Personen, Texte und Aufgaben sind für
+   ältere Jugendliche neu geschrieben.
+   ============================================================ */
+
+const LAENDER = [
+  { id:'is', name:'Island', flag:'🇮🇸', hauptstadt:'Reykjavík', hue:196,
+    wz:'Geysir Strokkur', wzInfo:'Alle paar Minuten schießt hier eine Wasserfontäne 20 Meter hoch. Der Boden Islands sitzt auf zwei auseinanderdriftenden Erdplatten.',
+    fakt:'Fast der gesamte Strom kommt aus Wasserkraft und Erdwärme — Island heizt buchstäblich mit dem Vulkan unter dem Haus.',
+    person:{ name:'Elín', alter:17, ort:'Reykjavík', tags:['Geologie','Chor','Fotografie'],
+      kurz:'Wohnt 20 Minuten von einem aktiven Vulkansystem entfernt und findet das völlig normal.',
+      land:'Wir sind 380.000 Leute auf einer Insel so groß wie Ungarn. Man kennt entweder jeden oder niemanden.',
+      alltag:'Schule bis halb drei, danach Schwimmhalle — draußen, beheizt, bei jedem Wetter. Das machen hier alle.',
+      freizeit:'Ich fotografiere Langzeitbelichtungen von Nordlichtern. Im Winter hat man dafür ziemlich viel Zeit.',
+      essen:'Skyr esse ich jeden Tag. Fermentierten Hai probierst du einmal und nie wieder, versprochen.' },
+    quiz:{ f:'Woher bezieht Island fast seinen gesamten Strom?', r:'Wasserkraft und Erdwärme', w:['Kernkraft','Importe aus Norwegen'] } },
+
+  { id:'ie', name:'Irland', flag:'🇮🇪', hauptstadt:'Dublin', hue:140,
+    wz:'Cliffs of Moher', wzInfo:'214 Meter senkrecht in den Atlantik. Bei Sturm steht die Gischt so hoch, dass Regen von unten kommt.',
+    fakt:'Irisch ist erste Amtssprache, aber nur eine Minderheit spricht es im Alltag — an der Schule lernen es trotzdem alle.',
+    person:{ name:'Aoife', alter:16, ort:'Galway', tags:['Musik','Debattieren','Surfen'],
+      kurz:'Spielt Fiddle in einer Session-Runde, in der sie mit Abstand die Jüngste ist.',
+      land:'Der Westen ist leer und grün, Dublin ist voll und teuer. Ich mag den Westen.',
+      alltag:'Wir haben ein Übergangsjahr zwischen Mittel- und Oberstufe — Praktika, Projekte, keine Noten. Ziemlich klug eigentlich.',
+      freizeit:'Freitags Session im Pub, keine Noten auf Papier, alles nach Gehör. Und im Sommer Surfen, auch wenn das Wasser weh tut.',
+      essen:'Brown Bread mit Butter. Klingt langweilig, ist es nicht.' },
+    quiz:{ f:'Was ist in Irland das „Transition Year“?', r:'Ein notenfreies Jahr für Praktika und Projekte', w:['Ein Austauschjahr im Ausland','Das letzte Schuljahr vor dem Abschluss'] } },
+
+  { id:'uk', name:'Großbritannien', flag:'🇬🇧', hauptstadt:'London', hue:220,
+    wz:'Big Ben', wzInfo:'Big Ben ist streng genommen nur die Glocke; der Turm heißt Elizabeth Tower. Die Ganggenauigkeit wird mit aufgelegten Pennys justiert.',
+    fakt:'Vier Landesteile, drei eigene Parlamente, ein gemeinsamer Pass — und seit 2020 kein EU-Mitglied mehr.',
+    person:{ name:'Oliver', alter:17, ort:'Manchester', tags:['Politik','Fußball','Podcasts'],
+      kurz:'Hat aus dem Brexit ein Schulprojekt gemacht und ist seitdem nicht mehr davon losgekommen.',
+      land:'Wir sind raus aus der EU, und trotzdem hänge ich hier mit euch rum. Sagt vielleicht was aus.',
+      alltag:'A-Levels heißt: drei Fächer, sonst nichts. Man entscheidet sich mit 16 ziemlich endgültig.',
+      freizeit:'Ich mache einen Schulpodcast über Kommunalpolitik. Zwölf Hörer, aber sehr treue.',
+      essen:'Sunday Roast bei meiner Nan. Nicht verhandelbar.' },
+    quiz:{ f:'Was bezeichnet der Name „Big Ben“ genau genommen?', r:'Die Glocke im Turm', w:['Den Uhrturm','Das Parlamentsgebäude'] } },
+
+  { id:'pt', name:'Portugal', flag:'🇵🇹', hauptstadt:'Lissabon', hue:35,
+    wz:'Tram 28', wzInfo:'Die gelbe Straßenbahn klettert seit 1914 durch die Altstadt. Für Touristen eine Attraktion, für Anwohner der einzige Weg den Berg hoch.',
+    fakt:'Portugal und Spanien trennt die älteste unveränderte Grenze Europas — festgelegt 1297.',
+    person:{ name:'Tiago', alter:16, ort:'Porto', tags:['Surfen','Programmieren','Kochen'],
+      kurz:'Steht dreimal die Woche vor der Schule im Wasser. Um sechs, wenn es noch dunkel ist.',
+      land:'Alle denken, Portugal ist Lissabon. Porto ist besser, und das sagt hier jeder.',
+      alltag:'Schule geht bis halb sechs. Dafür isst man mittags richtig, nicht so ein Brot zwischendurch.',
+      freizeit:'Surfen, und ich baue eine App, die Wellenvorhersagen für meinen Strand zusammenrechnet.',
+      essen:'Francesinha. Ein Sandwich, das dich für den Rest des Tages ausschaltet.' },
+    quiz:{ f:'Was ist an der portugiesisch-spanischen Grenze besonders?', r:'Sie ist die älteste unveränderte Grenze Europas', w:['Sie verläuft komplett durch Gebirge','Sie wurde erst 1986 festgelegt'] } },
+
+  { id:'es', name:'Spanien', flag:'🇪🇸', hauptstadt:'Madrid', hue:45,
+    wz:'Sagrada Família', wzInfo:'Seit 1882 im Bau. Gaudí sagte, sein Auftraggeber habe es nicht eilig. Fertigstellung inzwischen für die 2030er angesetzt.',
+    fakt:'Neben Spanisch sind Katalanisch, Galicisch und Baskisch regional Amtssprachen — Baskisch ist mit keiner anderen Sprache Europas verwandt.',
+    person:{ name:'Lucía', alter:17, ort:'Valencia', tags:['Theater','Klima','Tanzen'],
+      kurz:'Organisiert die Klimagruppe ihrer Schule und hat gelernt, wie zäh Verwaltung sein kann.',
+      land:'Vier Sprachen, siebzehn Regionen, und jede findet ihre Version die richtige.',
+      alltag:'Unterricht bis 14 Uhr, dann Mittagessen mit der Familie. Abends ist alles noch offen, wir essen um zehn.',
+      freizeit:'Theater-AG. Und seit der Flut 2024 bin ich in einer Gruppe, die sich um Hochwasserschutz kümmert.',
+      essen:'Paella am Sonntag, und zwar mit Kaninchen. Meeresfrüchte sind Touristenversion, sagt mein Vater.' },
+    quiz:{ f:'Welche Sprache Spaniens ist mit keiner anderen europäischen Sprache verwandt?', r:'Baskisch', w:['Katalanisch','Galicisch'] } },
+
+  { id:'fr', name:'Frankreich', flag:'🇫🇷', hauptstadt:'Paris', hue:225,
+    wz:'Eiffelturm', wzInfo:'330 Meter, gebaut als Ausstellungsbau für 20 Jahre. Er blieb stehen, weil man oben Funkantennen anbringen konnte.',
+    fakt:'Frankreich hat Gebiete auf fünf Kontinenten — deshalb reicht die EU-Außengrenze bis nach Südamerika.',
+    person:{ name:'Chloé', alter:18, ort:'Lyon', tags:['Philosophie','Radsport','Kino'],
+      kurz:'Schreibt gerade ihre Abiturklausur in Philosophie — vier Stunden, ein Satz als Thema.',
+      land:'Wir diskutieren gern und laut. Das ist keine Streiterei, das ist Sport.',
+      alltag:'Bac-Jahr. Philosophie ist Pflichtfach für alle, und die Prüfung ist ein einziger Aufsatz.',
+      freizeit:'Rennrad. Und Kino im Originalton, davon gibt es hier zum Glück viel.',
+      essen:'Mittags in der Kantine gibt es Vorspeise, Hauptgang, Käse und Nachtisch. Ich dachte, das sei überall so.' },
+    quiz:{ f:'Warum blieb der Eiffelturm nach der Weltausstellung stehen?', r:'Er war als Funkturm nützlich', w:['Der Abriss war zu teuer','Ein Volksentscheid rettete ihn'] } },
+
+  { id:'be', name:'Belgien', flag:'🇧🇪', hauptstadt:'Brüssel', hue:50,
+    wz:'Atomium', wzInfo:'Ein Eisenkristall, 165 Milliarden Mal vergrößert. Gebaut für die Weltausstellung 1958 und eigentlich zum Abriss gedacht.',
+    fakt:'In Brüssel sitzen Kommission und Rat der EU. Belgien selbst hat sechs Regierungen für elf Millionen Einwohner.',
+    person:{ name:'Arthur', alter:16, ort:'Gent', tags:['Comics','Schach','Sprachen'],
+      kurz:'Wechselt mitten im Satz zwischen Niederländisch, Französisch und Englisch, ohne es zu merken.',
+      land:'Zwei Sprachgemeinschaften, die sich höflich ignorieren, und dazwischen die EU-Zentrale.',
+      alltag:'Ich lerne Französisch als zweite Landessprache — und merke, dass die Leute in Wallonien trotzdem lieber Englisch mit mir reden.',
+      freizeit:'Comics. Belgische natürlich, wir haben das Format hier erfunden.',
+      essen:'Fritten aus der Bude, mit Mayo. Diese Diskussion führe ich nicht nochmal.' },
+    quiz:{ f:'Was stellt das Atomium dar?', r:'Einen stark vergrößerten Eisenkristall', w:['Ein Modell des Sonnensystems','Ein Molekül aus der Chemieindustrie'] } },
+
+  { id:'nl', name:'Niederlande', flag:'🇳🇱', hauptstadt:'Amsterdam', hue:28,
+    wz:'Deltawerke', wzInfo:'Ein Sturmflutwehr-System, gebaut nach der Flutkatastrophe von 1953. Ein Viertel des Landes liegt unter dem Meeresspiegel.',
+    fakt:'Es gibt mehr Fahrräder als Einwohner — und Radwege, die als eigenes Straßennetz geplant werden.',
+    person:{ name:'Sanne', alter:17, ort:'Rotterdam', tags:['Architektur','Rudern','Debattieren'],
+      kurz:'Kann dir genau erklären, warum ihr Wohnviertel drei Meter unter dem Meeresspiegel liegt.',
+      land:'Wir haben das Land dem Wasser abgetrotzt und rechnen jedes Jahr nach, ob das noch aufgeht.',
+      alltag:'Ich radle 11 Kilometer zur Schule. Bei Gegenwind ist das eine Charakterprüfung.',
+      freizeit:'Rudern auf der Maas. Und ich schaue mir Neubauten an — Rotterdam wurde komplett neu gebaut, das sieht man.',
+      essen:'Stroopwafel auf die Kaffeetasse legen, warten, essen. Es gibt keine bessere Methode.' },
+    quiz:{ f:'Wofür wurden die Deltawerke gebaut?', r:'Als Schutz vor Sturmfluten', w:['Zur Stromerzeugung','Als Binnenhafen für Rotterdam'] } },
+
+  { id:'de', name:'Deutschland', flag:'🇩🇪', hauptstadt:'Berlin', hue:210,
+    wz:'Brandenburger Tor', wzInfo:'Von 1961 bis 1989 stand es im Sperrgebiet zwischen den beiden Mauern — erreichbar für niemanden.',
+    fakt:'Neun Nachbarländer, mehr als jedes andere EU-Land. Schulpolitik machen dabei sechzehn Bundesländer einzeln.',
+    person:{ name:'Ben', alter:17, ort:'Leipzig', tags:['Musik','Geschichte','Klettern'],
+      kurz:'Wohnt in einer Stadt, die 1989 den Anfang gemacht hat, und hört davon jede Woche.',
+      land:'Jedes Bundesland macht sein eigenes Abitur. Umziehen mitten in der Schulzeit ist ein Albtraum.',
+      alltag:'Schule bis halb zwei, dann Bandprobe im Keller eines alten Umspannwerks.',
+      freizeit:'Bass in einer Band, und klettern in der Halle. Draußen ist hier flach.',
+      essen:'Bei uns gibt es Quarkkeulchen. Fragt niemand außerhalb Sachsens nach, aber sie sind großartig.' },
+    quiz:{ f:'Wo lag das Brandenburger Tor zwischen 1961 und 1989?', r:'Im Sperrgebiet zwischen den Mauern', w:['Auf westlicher Seite','Direkt am Checkpoint Charlie'] } },
+
+  { id:'dk', name:'Dänemark', flag:'🇩🇰', hauptstadt:'Kopenhagen', hue:355,
+    wz:'Öresundbrücke', wzInfo:'Acht Kilometer Brücke, dann verschwindet die Strecke in einem Tunnel — damit die Flugzeuge von Kopenhagen starten können.',
+    fakt:'Über 400 Inseln, aber nur etwa 70 sind bewohnt. Der höchste Punkt des Landes liegt bei 171 Metern.',
+    person:{ name:'Freja', alter:16, ort:'Aarhus', tags:['Design','Handball','Ehrenamt'],
+      kurz:'Verbringt ein Jahr an einer Efterskole — Internat, freiwillig, mitten in der Schulzeit.',
+      land:'Flach, windig, gut organisiert. Und wir vertrauen einander erstaunlich weit.',
+      alltag:'Efterskole heißt: ein Jahr mit Gleichaltrigen wohnen statt zu Hause. Fast jeder Zweite macht das.',
+      freizeit:'Handball, und ich entwerfe Plakate für unsere Schulveranstaltungen.',
+      essen:'Smørrebrød ist kein Snack, das ist eine Konstruktion. Reihenfolge der Beläge ist geregelt.' },
+    quiz:{ f:'Warum geht die Öresundverbindung teilweise durch einen Tunnel?', r:'Wegen des Flugverkehrs am Kopenhagener Flughafen', w:['Wegen zu tiefen Wassers','Wegen der Schifffahrtsroute'] } },
+
+  { id:'no', name:'Norwegen', flag:'🇳🇴', hauptstadt:'Oslo', hue:200,
+    wz:'Geirangerfjord', wzInfo:'Ein Fjord ist ein vom Gletscher ausgeschürftes Tal, das das Meer geflutet hat. Norwegens Küste ist deshalb über 25.000 Kilometer lang.',
+    fakt:'Norwegen ist kein EU-Mitglied, aber über den EWR an fast alle Binnenmarktregeln gebunden.',
+    person:{ name:'Magnus', alter:18, ort:'Bergen', tags:['Ski','Umwelt','Elektronik'],
+      kurz:'Diskutiert regelmäßig darüber, wie ein Ölstaat gleichzeitig Klimavorreiter sein will.',
+      land:'Wir sind nicht in der EU, halten uns aber an fast alles. Das erklärt sich schlecht in einem Satz.',
+      alltag:'In Bergen regnet es an 240 Tagen im Jahr. Man geht trotzdem raus, es gibt keine Alternative.',
+      freizeit:'Langlauf, sobald Schnee liegt. Und ich löte an einem Wetterballon-Projekt der Schule.',
+      essen:'Brunost — brauner Karamellkäse. Sieht falsch aus, schmeckt richtig.' },
+    quiz:{ f:'In welcher Beziehung steht Norwegen zur EU?', r:'Kein Mitglied, aber über den EWR eng gebunden', w:['Vollmitglied seit 1995','Beitrittskandidat'] } },
+
+  { id:'se', name:'Schweden', flag:'🇸🇪', hauptstadt:'Stockholm', hue:190,
+    wz:'Vasa-Museum', wzInfo:'Ein Kriegsschiff, das 1628 nach 1300 Metern Fahrt sank und 333 Jahre später fast vollständig gehoben wurde.',
+    fakt:'Das Allemansrätten erlaubt jedem, überall in der Natur zu wandern und zu zelten — auch auf privatem Grund.',
+    person:{ name:'Elsa', alter:17, ort:'Göteborg', tags:['Film','Nachhaltigkeit','Chor'],
+      kurz:'Schneidet Kurzfilme und schläft im Sommer regelmäßig irgendwo im Wald, ganz legal.',
+      land:'Man darf hier überall zelten, auch auf fremdem Land. Das erklärt viel über uns.',
+      alltag:'Wir duzen die Lehrkräfte mit Vornamen. Als eine Austauschschülerin „Frau Andersson“ sagte, wusste niemand, wer gemeint war.',
+      freizeit:'Film-AG, und im Sommer Kanu mit Zelt. Fika ist keine Pause, das ist ein Termin.',
+      essen:'Zimtschnecken. Es gibt sogar einen offiziellen Tag dafür, den 4. Oktober.' },
+    quiz:{ f:'Was regelt das schwedische „Allemansrätten“?', r:'Das Recht, sich frei in der Natur zu bewegen', w:['Die Wehrpflicht','Das Wahlrecht ab 16'] } },
+
+  { id:'fi', name:'Finnland', flag:'🇫🇮', hauptstadt:'Helsinki', hue:175,
+    wz:'Lappland', wzInfo:'Nördlich des Polarkreises geht die Sonne im Sommer wochenlang nicht unter und im Winter wochenlang nicht auf.',
+    fakt:'Finnisch ist mit Schwedisch oder Russisch nicht verwandt — es gehört zur finno-ugrischen Familie, wie Estnisch und Ungarisch.',
+    person:{ name:'Aino', alter:16, ort:'Tampere', tags:['Physik','Sauna','Metal'],
+      kurz:'Hat in der Schule kaum Hausaufgaben und findet die deutschen Erzählungen darüber beunruhigend.',
+      land:'188.000 Seen und eine Sprache, die niemand von außen versteht. Wir mögen das so.',
+      alltag:'Wir haben wenig Hausaufgaben und keine Schuluniform, dafür Mittagessen umsonst für alle. Seit den 40ern.',
+      freizeit:'Sauna, dann in den See, auch im Februar. Und ich spiele Schlagzeug, hier hat jede zweite Kleinstadt eine Metalband.',
+      essen:'Korvapuusti, also Zimtschnecken mit Kardamom. Und Lakritz, das salzig ist. Ja, salzig.' },
+    quiz:{ f:'Mit welcher Sprache ist Finnisch verwandt?', r:'Estnisch', w:['Schwedisch','Russisch'] } },
+
+  { id:'ee', name:'Estland', flag:'🇪🇪', hauptstadt:'Tallinn', hue:165,
+    wz:'Altstadt von Tallinn', wzInfo:'Eine der besterhaltenen mittelalterlichen Städte Nordeuropas — Stadtmauer, Türme und Straßenverlauf stammen aus dem 14. Jahrhundert.',
+    fakt:'Fast alle Verwaltungsleistungen laufen digital: Steuererklärung in Minuten, Wählen per Internet seit 2005.',
+    person:{ name:'Kertu', alter:17, ort:'Tartu', tags:['Informatik','Chor','Politik'],
+      kurz:'Hat ihre erste Steuererklärung in vier Minuten am Handy gemacht und versteht das Staunen nicht.',
+      land:'Wir sind 1,3 Millionen Leute und haben den Staat quasi als App gebaut.',
+      alltag:'Programmieren ist ab der Grundschule Teil des Unterrichts. Nicht als AG, als Fach.',
+      freizeit:'Chor. Alle fünf Jahre singen 30.000 Menschen gemeinsam beim Sängerfest — das hat uns mit zur Unabhängigkeit gesungen.',
+      essen:'Schwarzbrot. Estnisches Schwarzbrot, nicht das, was ihr dafür haltet.' },
+    quiz:{ f:'Was ist in Estland seit 2005 landesweit möglich?', r:'Wählen über das Internet', w:['Schulpflicht bis 20','Kostenloser Nahverkehr im ganzen Land'] } },
+
+  { id:'lv', name:'Lettland', flag:'🇱🇻', hauptstadt:'Riga', hue:350,
+    wz:'Jugendstilviertel Riga', wzInfo:'Rund ein Drittel der Rigaer Innenstadt ist im Jugendstil gebaut — die größte zusammenhängende Sammlung Europas.',
+    fakt:'Über die Hälfte der Landesfläche ist Wald, und der Anteil wächst seit Jahrzehnten.',
+    person:{ name:'Līga', alter:16, ort:'Riga', tags:['Kunstgeschichte','Basketball','Imkern'],
+      kurz:'Führt Austauschgruppen durch die Jugendstilstraßen und zeigt dabei immer dasselbe Lieblingshaus.',
+      land:'Zwischen Ostsee und Wald, mit einer Hauptstadt voller verzierter Fassaden.',
+      alltag:'Wir haben Schuluniform an vielen Schulen, aber jede Schule entwirft ihre eigene.',
+      freizeit:'Basketball, und meine Großmutter bringt mir das Imkern bei. Der Honig kommt aus dem Wald hinterm Haus.',
+      essen:'Rupjmaize, also Roggenbrot, und Kefir dazu. Klingt karg, ist es nicht.' },
+    quiz:{ f:'Wofür ist die Rigaer Innenstadt bekannt?', r:'Die größte Jugendstil-Sammlung Europas', w:['Die älteste Universität des Baltikums','Einen mittelalterlichen Hafenkran'] } },
+
+  { id:'lt', name:'Litauen', flag:'🇱🇹', hauptstadt:'Vilnius', hue:110,
+    wz:'Berg der Kreuze', wzInfo:'Ein Hügel mit über 100.000 Kreuzen. In der Sowjetzeit dreimal planiert — und jedes Mal über Nacht neu bestückt.',
+    fakt:'Litauisch gilt als die konservativste lebende indoeuropäische Sprache — es hat Formen bewahrt, die sonst nur aus dem Sanskrit bekannt sind.',
+    person:{ name:'Matas', alter:17, ort:'Kaunas', tags:['Basketball','Geschichte','Sneaker'],
+      kurz:'Erklärt dir binnen einer Minute, warum Basketball hier keine Sportart, sondern eine Konfession ist.',
+      land:'Wir liegen ungefähr in der geografischen Mitte Europas und wurden trotzdem lange übersehen.',
+      alltag:'Nach der Schule Training. Wer nicht spielt, schaut zu — die Liga füllt hier Hallen wie anderswo Fußball.',
+      freizeit:'Basketball, und ich sammle Geschichten über den Berg der Kreuze von Leuten, die dabei waren.',
+      essen:'Cepelinai. Sehr schwer, sehr gut, danach brauchst du eine Pause.' },
+    quiz:{ f:'Was geschah in der Sowjetzeit mehrfach mit dem Berg der Kreuze?', r:'Er wurde planiert und neu errichtet', w:['Er wurde zum Museum erklärt','Er wurde ins Ausland verlegt'] } },
+
+  { id:'pl', name:'Polen', flag:'🇵🇱', hauptstadt:'Warschau', hue:5,
+    wz:'Altstadt von Warschau', wzInfo:'1944 fast vollständig zerstört, danach nach alten Gemälden originalgetreu wiederaufgebaut — heute UNESCO-Welterbe genau dafür.',
+    fakt:'Polen hat die Ostgrenze der EU zu Belarus und der Ukraine und ist seit 2022 wichtigstes Transitland für Hilfslieferungen.',
+    person:{ name:'Zuzanna', alter:18, ort:'Krakau', tags:['Journalismus','Schach','Wandern'],
+      kurz:'Schreibt für die Schülerzeitung über Leute, die 2022 spontan Wohnungen geöffnet haben.',
+      land:'Wir haben unsere Hauptstadt nach dem Krieg aus Gemälden rekonstruiert. Das sagt einiges über Sturheit.',
+      alltag:'Matura im Frühjahr. Danach wollen viele weg — und ziemlich viele kommen inzwischen auch wieder.',
+      freizeit:'Ich wandere in der Tatra und schreibe für unsere Schulzeitung.',
+      essen:'Pierogi ruskie, mit Kartoffeln und Quark. Alles andere ist Nebensache.' },
+    quiz:{ f:'Warum ist Warschaus Altstadt UNESCO-Welterbe?', r:'Wegen des originalgetreuen Wiederaufbaus nach 1945', w:['Weil sie den Krieg unbeschädigt überstand','Wegen ihrer barocken Stadtmauer'] } },
+
+  { id:'cz', name:'Tschechien', flag:'🇨🇿', hauptstadt:'Prag', hue:15,
+    wz:'Karlsbrücke', wzInfo:'1357 begonnen, angeblich am 9. Juli um 5:31 Uhr — die Zahlenfolge 1357 9/7 5:31 liest sich vorwärts wie rückwärts.',
+    fakt:'Tschechien hat den höchsten Bierkonsum pro Kopf weltweit — und eine Brauereischule mit Abitur.',
+    person:{ name:'Eliška', alter:16, ort:'Brünn', tags:['Chemie','Eishockey','Zeichnen'],
+      kurz:'Zeichnet Comics über ihre Chemie-Olympiade-Gruppe und trifft den Ton dabei ziemlich genau.',
+      land:'Ein Land ohne Meer, dafür mit einer Hauptstadt, die alle sehen wollen. Wir wohnen woanders.',
+      alltag:'Gymnasium mit acht Jahren, Aufnahmeprüfung mit elf. Da wird früh sortiert.',
+      freizeit:'Eishockey schauen, Chemie-Olympiade machen, Comics zeichnen. In der Reihenfolge.',
+      essen:'Svíčková. Rindfleisch in Rahmsoße mit Knödeln, und ja, mit Preiselbeeren und Sahne.' },
+    quiz:{ f:'Was ist am Baubeginn der Karlsbrücke bemerkenswert?', r:'Die Datumszahlen bilden ein Palindrom', w:['Sie wurde in einem Jahr fertig','Sie wurde von Karl IV. selbst entworfen'] } },
+
+  { id:'at', name:'Österreich', flag:'🇦🇹', hauptstadt:'Wien', hue:340,
+    wz:'Wiener Riesenrad', wzInfo:'Seit 1897 in Betrieb. Von ursprünglich 30 Waggons blieben nach dem Krieg 15 — aus Materialmangel wurde nur die Hälfte ersetzt.',
+    fakt:'Österreich ist neutral: kein NATO-Mitglied, aber seit 1995 in der EU.',
+    person:{ name:'Felix', alter:17, ort:'Graz', tags:['Musik','Bergsteigen','Kabarett'],
+      kurz:'Spielt Klarinette im Landesjugendorchester und macht sich über den Begriff „Landesjugendorchester“ lustig.',
+      land:'Zwei Drittel Alpen, ein Drittel Verwaltung. Und alles davon sehr ernst genommen.',
+      alltag:'Zentralmatura, also einheitliche Prüfungen im ganzen Land. Vorher war das Glückssache.',
+      freizeit:'Orchester, und im Sommer Klettersteige. Wien mag ich, aber alle drei Monate reicht.',
+      essen:'Kaiserschmarrn nach dem Wandern. Vorher wäre unklug.' },
+    quiz:{ f:'Welchen Status hat Österreich sicherheitspolitisch?', r:'Neutral, kein NATO-Mitglied', w:['NATO-Gründungsmitglied','NATO-Beitritt 1995'] } },
+
+  { id:'ch', name:'Schweiz', flag:'🇨🇭', hauptstadt:'Bern', hue:0,
+    wz:'Matterhorn', wzInfo:'4478 Meter, und die markante Pyramidenform entstand, weil vier Gletscher den Berg von allen Seiten gleichzeitig abgeschliffen haben.',
+    fakt:'Vier Amtssprachen, kein EU-Mitglied, und über Sachfragen wird viermal im Jahr per Volksabstimmung entschieden.',
+    person:{ name:'Luca', alter:17, ort:'Luzern', tags:['Politik','Snowboard','Uhren'],
+      kurz:'Darf noch nicht wählen, verfolgt aber jede Abstimmungsvorlage, als hinge sein Leben davon ab.',
+      land:'Wir stimmen über fast alles ab. Manchmal über Dinge, bei denen ich mir denke: wirklich, darüber?',
+      alltag:'Viele machen eine Lehre statt Abitur, und das ist kein Abstieg. Mein Bruder repariert Turbinen und verdient mehr als ich je werde.',
+      freizeit:'Snowboard im Winter, und ich schraube an alten Uhrwerken herum.',
+      essen:'Fondue, aber nur ab Oktober. Es gibt Regeln.' },
+    quiz:{ f:'Wie oft finden in der Schweiz landesweite Volksabstimmungen statt?', r:'Etwa viermal im Jahr', w:['Alle vier Jahre','Nur bei Verfassungsänderungen'] } },
+
+  { id:'it', name:'Italien', flag:'🇮🇹', hauptstadt:'Rom', hue:120,
+    wz:'Kolosseum', wzInfo:'Fasste bis zu 50.000 Zuschauer und hatte ein Sonnensegel, das Matrosen der Kriegsflotte über die Ränge spannten.',
+    fakt:'In Italien stehen mehr UNESCO-Welterbestätten als in jedem anderen Land der Welt.',
+    person:{ name:'Marco', alter:16, ort:'Bologna', tags:['Kochen','Fußball','Latein'],
+      kurz:'Kocht seit er zehn ist für die ganze Familie und hat starke Meinungen über Nudelformen.',
+      land:'Der Norden und der Süden führen seit 160 Jahren dasselbe Gespräch. Es wird nicht kürzer.',
+      alltag:'Liceo classico heißt: fünf Jahre Latein und Altgriechisch. Ich frage mich täglich, warum, und würde es wieder machen.',
+      freizeit:'Fußball auf der Piazza, bis es dunkel wird. Und kochen — richtig, nicht aus der Packung.',
+      essen:'Tagliatelle al ragù. Nicht Spaghetti Bolognese, das gibt es hier nicht. Wirklich nicht.' },
+    quiz:{ f:'Wer bediente im Kolosseum das Sonnensegel?', r:'Matrosen der römischen Flotte', w:['Sklaven aus der Arena','Die Zuschauer der obersten Ränge'] } },
+
+  { id:'hu', name:'Ungarn', flag:'🇭🇺', hauptstadt:'Budapest', hue:60,
+    wz:'Széchenyi-Bad', wzInfo:'Gespeist aus einer 1246 Meter tiefen Thermalquelle mit 74 Grad heißem Wasser. Budapest hat über hundert Thermalquellen im Stadtgebiet.',
+    fakt:'Ungarisch ist keine indogermanische Sprache — die nächsten Verwandten sind Finnisch und Estnisch, und selbst die sind weit weg.',
+    person:{ name:'Bence', alter:17, ort:'Szeged', tags:['Schwimmen','Mathe','Fotografie'],
+      kurz:'Trainiert sechsmal die Woche im Becken und macht nebenbei Mathe-Wettbewerbe.',
+      land:'Eine Sprache, die sonst niemand spricht, und Bäder, in denen alte Männer im Wasser Schach spielen.',
+      alltag:'Wir haben Mathe-Wettbewerbe, die hier ernster genommen werden als Sport. Bei mir zufällig beides.',
+      freizeit:'Schwimmen. Und Fotografie, meistens im Bad, wenn der Dampf richtig steht.',
+      essen:'Gulyás ist bei uns eine Suppe, kein Eintopf. Das ist der häufigste Irrtum über uns.' },
+    quiz:{ f:'Mit welchen Sprachen ist Ungarisch entfernt verwandt?', r:'Finnisch und Estnisch', w:['Rumänisch und Italienisch','Tschechisch und Slowakisch'] } },
+
+  { id:'hr', name:'Kroatien', flag:'🇭🇷', hauptstadt:'Zagreb', hue:185,
+    wz:'Stadtmauer von Dubrovnik', wzInfo:'Zwei Kilometer begehbare Mauer, bis zu sechs Meter dick. Dubrovnik war jahrhundertelang eine eigenständige Seerepublik.',
+    fakt:'Kroatien hat 1244 Inseln und Felsen, aber nur knapp 50 sind bewohnt. Seit 2023 gilt hier der Euro.',
+    person:{ name:'Petra', alter:16, ort:'Split', tags:['Meeresbiologie','Wasserball','Gitarre'],
+      kurz:'Zählt in den Sommerferien Seegraswiesen für ein Forschungsprojekt und taucht dafür jeden Tag.',
+      land:'Eine sehr lange Küste, sehr viele Inseln und im Sommer sehr viele Gäste.',
+      alltag:'Im Sommer arbeiten fast alle in meinem Alter im Tourismus. Ich zähle lieber Seegras.',
+      freizeit:'Wasserball, und Tauchen für ein Projekt der Uni Split. Gitarre abends am Hafen.',
+      essen:'Peka — Fleisch und Gemüse unter einer Eisenglocke in der Glut. Dauert drei Stunden.' },
+    quiz:{ f:'Was war Dubrovnik jahrhundertelang?', r:'Eine eigenständige Seerepublik', w:['Venezianische Provinz','Osmanische Hafenstadt'] } },
+
+  { id:'gr', name:'Griechenland', flag:'🇬🇷', hauptstadt:'Athen', hue:205,
+    wz:'Akropolis', wzInfo:'Der Parthenon hat fast keine geraden Linien: Säulen neigen sich leicht nach innen, der Sockel wölbt sich — damit er dem Auge gerade erscheint.',
+    fakt:'Griechenland hat rund 6.000 Inseln, von denen etwa 200 bewohnt sind, und die längste Küste der EU.',
+    person:{ name:'Nikos', alter:18, ort:'Thessaloniki', tags:['Archäologie','Segeln','Rap'],
+      kurz:'Gräbt in den Sommerferien mit einem Uni-Team und findet dabei meistens Scherben.',
+      land:'Alle kommen wegen der Antike. Wir leben aber im Jetzt, und das ist auch interessant.',
+      alltag:'Nach der Schule Frontistirio, also Nachhilfeschule. Fast alle machen das, wegen der Uni-Aufnahmeprüfung.',
+      freizeit:'Segeln, und ich schreibe Rap auf Griechisch. Die Sprache hat dafür erstaunlich gute Reime.',
+      essen:'Bougatsa am Morgen, direkt aus dem Blech. Fragt nach der herzhaften Version.' },
+    quiz:{ f:'Was ist am Bau des Parthenon ungewöhnlich?', r:'Er hat kaum gerade Linien — eine optische Korrektur', w:['Er besteht vollständig aus Marmorblöcken ohne Mörtel','Er wurde in nur zwei Jahren errichtet'] } },
+
+  { id:'ro', name:'Rumänien', flag:'🇷🇴', hauptstadt:'Bukarest', hue:95,
+    wz:'Karpaten', wzInfo:'In den rumänischen Karpaten lebt etwa die Hälfte aller Braunbären der EU — rund 6.000 Tiere.',
+    fakt:'Rumänisch ist eine romanische Sprache, umgeben von slawischen und ungarischen Nachbarn.',
+    person:{ name:'Ioana', alter:17, ort:'Cluj', tags:['Informatik','Wandern','Volkstanz'],
+      kurz:'Programmiert für einen Wettbewerb und tanzt am Wochenende in einer Volkstanzgruppe. Beides ernsthaft.',
+      land:'Wir sprechen eine romanische Sprache und niemand rechnet damit. Latein hilft hier wirklich.',
+      alltag:'Cluj ist voller IT-Firmen, und in der Schule merkt man das. Halbe Klasse will programmieren.',
+      freizeit:'Wandern in den Karpaten — mit Abstand zu den Bären. Und Volkstanz, seit ich sechs bin.',
+      essen:'Sarmale, gefüllte Krautwickel, dazu Mămăligă. An Feiertagen gibt es nichts anderes.' },
+    quiz:{ f:'Was ist sprachlich an Rumänien besonders?', r:'Es spricht eine romanische Sprache in slawischer Nachbarschaft', w:['Es hat zwei gleichberechtigte Amtssprachen','Seine Sprache ist mit Ungarisch verwandt'] } }
+];
+
+/* Lehrkräfte, die hier moderieren */
+const LEHRKRAEFTE = [
+  { name:'Frau Kowalski', fach:'Geschichte & Politik', land:'pl', ort:'Krakau',
+    kurz:'Stellt die Aufgaben zu Erinnerungskultur und liest jede Einreichung zweimal.',
+    hallo:'Schön, dass du da bist. Ich betreue hier die Aufgaben zu Geschichte und Politik — wenn etwas unklar ist, frag einfach.' },
+  { name:'Herr Lindqvist', fach:'Erdkunde', land:'se', ort:'Göteborg',
+    kurz:'Zuständig für alles, was mit Karten, Klima und Wegen zu tun hat.',
+    hallo:'Hallo! Ich sehe, du warst schon auf der Karte unterwegs. Sag Bescheid, wenn du eine Aufgabe zu einem bestimmten Land brauchst.' },
+  { name:'Mme Rousseau', fach:'Französisch & Europakunde', land:'fr', ort:'Lyon',
+    kurz:'Achtet darauf, dass Beiträge in mehreren Sprachen willkommen sind.',
+    hallo:'Bonjour! Du darfst deine Beiträge übrigens auch auf Französisch einreichen — oder in jeder anderen Sprache.' },
+  { name:'Sr. Delgado', fach:'Spanisch & Medien', land:'es', ort:'Valencia',
+    kurz:'Prüft Fotos und Videos und erklärt gern, warum etwas nicht freigegeben wurde.',
+    hallo:'Hola! Wenn ein Beitrag abgelehnt wird, steht immer eine Begründung dabei. Das ist mir wichtig.' }
+];
+
+/* Aufgaben, die zu Beginn schon eingestellt sind */
+const START_AUFGABEN = [
+  { id:'t-schulweg', land:null, titel:'Dein Schulweg in drei Bildern',
+    text:'Fotografiere drei Stationen deines Schulwegs und schreib je einen Satz dazu. Kein Gesicht muss darauf sein.',
+    punkte:5, von:'Herr Lindqvist' },
+  { id:'t-unwort', land:null, titel:'Ein Wort, das man nicht übersetzen kann',
+    text:'Such ein Wort aus deiner Sprache, für das es im Deutschen oder Englischen keine Entsprechung gibt. Erklär, wann man es benutzt.',
+    punkte:5, von:'Mme Rousseau' },
+  { id:'t-debatte', land:null, titel:'Worüber bei euch gerade gestritten wird',
+    text:'Nenne ein Thema, das in deinem Land öffentlich diskutiert wird, und beschreib beide Seiten in je drei Sätzen — ohne zu bewerten.',
+    punkte:8, von:'Frau Kowalski' },
+  { id:'t-lied', land:null, titel:'Ein Lied aus deinem Land',
+    text:'Empfiehl ein Lied, das gerade bei Gleichaltrigen läuft. Was steht im Text, und warum funktioniert es?',
+    punkte:4, von:'Sr. Delgado' },
+  { id:'t-erinnerung', land:'pl', titel:'Ein Ort, an dem Geschichte sichtbar ist',
+    text:'Such in deiner Stadt einen Ort, an dem etwas Vergangenes noch zu sehen ist — eine Lücke, eine Tafel, eine Narbe im Gebäude. Beschreib ihn.',
+    punkte:8, von:'Frau Kowalski' },
+  { id:'t-grenze', land:'de', titel:'Neun Nachbarn',
+    text:'Deutschland grenzt an neun Länder. Wähl eines aus und finde heraus, was diese Grenze für Leute in deinem Alter praktisch bedeutet.',
+    punkte:6, von:'Herr Lindqvist' }
+];
+
+/* ---- Kartendaten: unverändert aus dem Spiel ---- */
+
+const MAP_CHARS = {
+  I:'is', J:'ie', U:'uk', P:'pt', E:'es', F:'fr', B:'be', N:'nl',
+  D:'de', K:'dk', V:'no', S:'se', M:'fi', T:'ee', L:'lv', Y:'lt',
+  W:'pl', C:'cz', A:'at', Z:'ch', X:'it', H:'hu', Q:'hr', R:'ro', G:'gr'
+};
+
+const EUROPE_MAP = [
+  '.......................................................VVVVVVVVVVV..........................',
+  '................................................VVVVVVVVVVVVVVVVVVVVVV......................',
+  '........IIIII..................................VVVVVVVVVVVVVVVVVMMVVV.......................',
+  '....IIIIIIIIII...............................VVVVVVVVVVVVVVVMMMMMMMVV.......................',
+  '....IIIIIIIIIII.............................VVVVVVVVVVVVVMMMMMMMMMMM........................',
+  '.....IIIIIIIIII............................VVVVVVVVVVVVMMMMMMMMMMMMMM.......................',
+  '.....IIIIIIIII............................VVVVVVVVVSV...MMMMMMMMMMMMMM......................',
+  '........IIIII.............UU..............VVVVVVVSSSS....MMMMMMMMMMMM.......................',
+  '........................UUUU..............VVVVVSSSSSSS...MMMMMMMMMMMM.......................',
+  '.......................UUUUU.............VVVVVSSSSSSSSS..MMMMMMMMMMMM.......................',
+  '.......................UUUUUU............VVVVVSSSSSSSSS..MMMMMMMMMMM........................',
+  '......................UUUUUUU............VVVVVSSSSSSSSS...MMMMMMMMMM........................',
+  '......................UUUUUUU...........VVVVVVSSSSSSSS....MMMMMMMMM.........................',
+  '.......................UUUUUUU..........VVVVVVSSSSSSSS....MMMMMMMM..........................',
+  '.......................UUUUUUU..........VVVVVVSSSSSSSS.....MMMMMM...........................',
+  '........................UUUUUUU..........VVVVVSSSSSSSS......MMMM............................',
+  '.................JJJ....UUUUUUUU.........VVVV.SSSSSSSS.......MM.............................',
+  '...............JJJJJ.....UUUUUUU..............SSSSSSS.............................____......',
+  '...............JJJJJJ....UUUUUUU..........KKK..SSSSSS.....................____________......',
+  '..............JJJJJJJ...UUUUUUUU..........KKK..SSSSSS.................._______________......',
+  '..............JJJJJJ....UUUUUUUU..........KKK..SSSSS...........TTTTTTT._______________......',
+  '...............JJJJ.....UUUUUUUU.........KKKK...SSSS...........TTTTTTT._______________......',
+  '.................J.....UUUUUUUUU.........KKKK..................TTTTTTT._______________......',
+  '.......................UUUUUUUU..........KKKK.........................._______________......',
+  '........................UUUUU.............DDDDDDDDD...........LLLLLLLLL_______________......',
+  '..........................UU...........NNNDDDDDDDDDD..........LLLLLLLLL_______________......',
+  '.......................................NNNDDDDDDDDDDWWWWWWWWWWWLLLLLLLL_______________......',
+  '.......................................NNNDDDDDDDDDDDWWWWWWWWWW_______________________......',
+  '........................................NNDDDDDDDDDDDWWWWWWWWWWYYYYYY_________________......',
+  '........................................NNDDDDDDDDDDDWWWWWWWWWWWYYYY__________________......',
+  '...................................FFBBBBBDDDDDDDDDDDWWWWWWWWWWWYYYY__________________......',
+  '.................................FFFFFFBBDDDDDDDDDDDDWWWWWWWWWWW______________________......',
+  '..............................FFFFFFFFFFFFDDDDDDDDDDDWWWWWWWWWW_______________________......',
+  '............................FFFFFFFFFFFFFFFDDDDDDDDDDWWWWWWWWWW_______________________......',
+  '..........................FFFFFFFFFFFFFFFFFDDDDDDDDDDWWWWWWWWWW_______________________......',
+  '.........................FFFFFFFFFFFFFFFFFFDDDDDDDDDDWWWWWWWWW________________________......',
+  '........................FFFFFFFFFFFFFFFFFFFDDDDDDDCCCCCWW_____________________________......',
+  '........................FFFFFFFFFFFFFFFFFFFFDDCCCCCCCCCC______________________________......',
+  '........................FFFFFFFFFFFFFFFFFFFF_DCCCCCCCCCC______________________________......',
+  '........................FFFFFFFFFFFFFFFFFFFF__CCCCCCCCCCC____________RRRRRR___________......',
+  '........................FFFFFFFFFFFFFFFFFFFF__CCCCCCCCCC________RRRRRRRRRRRR__________......',
+  '.........................FFFFFFFFFFFFFFFFFF______CCCC_______HHHHRRRRRRRRRRRR__________......',
+  '.........................FFFFFFFFFFFFFFFFFF_______AAAAA_HHHHHHHHRRRRRRRRRRRR________........',
+  '.........................FFFFFFFFFFFFFFFFZZZ_AAAAAAAAAAAHHHHHHHHRRRRRRRRRRRRR___............',
+  '..........................FFFFFFFFFFFFFZZZZZ_AAAAAAAAAAAAHHHHHHHRRRRRRRRRRRR................',
+  '...........................FFFFFFFFFFFFZZZZZZAAAAAAAAAA__HHHH___RRRRRRRRRRR.................',
+  '.............................FFFFFFFFFFZZZZZZ__XXXXX...QQQQQQ_____RRRRRRRR..................',
+  '...........................EEEEEFFF........XXXXXXXXXX..QQQQQQQ________RRR_..................',
+  '..................EEEEEEEEEEEEEEE..........XXXXXXXXXXX.QQQQQQQQ____________.................',
+  '..............EPPEEEEEEEEEEEEEEEEE..........XXXXXXXXXX.QQQQQQQQQ___________.................',
+  '..............PPPEEEEEEEEEEEEEEEE...........XXXXXXXXX...QQQQQQQ____________.................',
+  '..............PPPEEEEEEEEEEEEEEEE...............XXXXXX...QQQQ_______________................',
+  '..............PPPEEEEEEEEEEEEEEEE..............XXXXXXX....QQ________________................',
+  '..............PPPEEEEEEEEEEEEEEE...............XXXXXXX.....________________.................',
+  '..............PPPEEEEEEEEEEEEEEE................XXXXXXX.....______________..................',
+  '..............PPPEEEEEEEEEEEEEEE..................XXXXX......____________...................',
+  '.............PPPPEEEEEEEEEEEEEE....................XXXXX......___________...................',
+  '.............PPPPEEEEEEEEEEEEE......................XXXXX......_GGGGGG__....................',
+  '.............PPPPEEEEEEEEEEEE........................XXXXX......GGGGGGG.....................',
+  '.............PPPPEEEEEEEEEEE.........................XXXXXX.....GGGGGGGG....................',
+  '.............PPPPEEEEEEEEEE...........................XXXXXXX...GGGGGGG.....................',
+  '.............PPPP.EEEEEEEE............................XXXXXXX...GGGGGG......................',
+  '..................EEEE.................................XXXXX....GGGGG.......................',
+  '........................................................X.......GGGG........................',
+  '......................................................X........GGGGGG.......................',
+  '.....................................................XX........GGGGGG.......................',
+  '................................................XXXXXX.........GGGGGG.......................',
+  '...............................................XXXXXX..........GGGGGGG......................',
+  '..................................................XXX...........GGGGG.......................',
+  '.................................................................GG.........................'
+];
+
+/* Fährverbindungen zu den Inseln – aus dem Spiel übernommen */
+const FAEHREN = [['uk','fr'], ['ie','uk'], ['is','uk'], ['dk','se'], ['fi','ee']];
+
+/* ---- Wortfilter: unverändert aus dem Spiel ---- */
+
+const BAD_SUBSTRINGS = [
+  'fick','fotze','hurensohn','hurentochter','wichs','arschloch',
+  'schlampe','missgeburt','schwuchtel','drecksau','kackbratze',
+  'penis','vagina','pimmel','muschi','titten','porno','sperma','dildo',
+  'fuck','bitch','asshole','motherfucker','wanker','dickhead',
+  'nigger','neger','kanake','judensau','faggot',
+  'hitler','nazi','siegheil','hakenkreuz','swastika','holocaustleugn'
+];
+
+const BAD_WORDS = [
+  'arsch','sex','sexy','hure','nutte','spast','spasti',
+  'idiot','depp','fettsack','opfa',
+  'ass','cunt','slut','whore','hoe','retard',
+  'heil','sieg'
+];
+
+const BAD_NAMES = ['adolf','stalin','satan','putin','osama','admin','moderator'];
+
+const LEHRER_PIN = '2468';
+
+const INTERESSEN = ['Musik','Sport','Politik','Kunst','Programmieren','Klima','Kochen','Film',
+  'Lesen','Fotografie','Reisen','Sprachen','Gaming','Theater','Wissenschaft','Ehrenamt'];
+
+const STIFTE = [
+  { id:'blau',   hex:'#2f4f8f', name:'Blau' },
+  { id:'rot',    hex:'#cf4a37', name:'Rot' },
+  { id:'gruen',  hex:'#2f7a4f', name:'Grün' },
+  { id:'violett',hex:'#6b4c9a', name:'Violett' },
+  { id:'ocker',  hex:'#b07d20', name:'Ocker' },
+  { id:'tuerkis',hex:'#12796f', name:'Türkis' }
+];
+</script>
+
+<script>
+/* ============================================================
+   hey EU · Oberfläche
+   ============================================================ */
+
+const $  = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+const SPEICHER = 'heyeu_web_v1';
+const sanft = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+function mulberry(seed) {
+  let a = seed >>> 0;
+  return function () {
+    a = (a + 0x6d2b79f5) >>> 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+function esc(s) { const d = document.createElement('div'); d.textContent = s == null ? '' : String(s); return d.innerHTML; }
+function landVon(id) { return LAENDER.find(l => l.id === id); }
+function css(name) { return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
+
+/* ---------------- Zustand ---------------- */
+
+const zustand = {
+  ich: { name: '', land: 'de', alter: 16, tags: [], stift: 'blau', seed: 4711 },
+  punkte: 0,
+  gesehen: [],
+  quizFertig: [],
+  aufgaben: START_AUFGABEN.map(a => ({ ...a })),
+  beitraege: [],
+  rolle: 'schueler',
+  lehrkraft: false
+};
+
+function sichern() {
+  try {
+    localStorage.setItem(SPEICHER, JSON.stringify({
+      ich: zustand.ich, punkte: zustand.punkte, gesehen: zustand.gesehen,
+      quizFertig: zustand.quizFertig, aufgaben: zustand.aufgaben, beitraege: zustand.beitraege
+    }));
+  } catch (e) {
+    try {
+      const ohneBild = { ...zustand, beitraege: zustand.beitraege.map(b => ({ ...b, bild: null })) };
+      localStorage.setItem(SPEICHER, JSON.stringify(ohneBild));
+    } catch (e2) { /* ohne Speicher weiterarbeiten */ }
+  }
+}
+function laden() {
+  try {
+    const d = JSON.parse(localStorage.getItem(SPEICHER));
+    if (!d) return;
+    Object.assign(zustand.ich, d.ich || {});
+    zustand.punkte = d.punkte || 0;
+    zustand.gesehen = d.gesehen || [];
+    zustand.quizFertig = d.quizFertig || [];
+    zustand.beitraege = d.beitraege || [];
+    if (Array.isArray(d.aufgaben) && d.aufgaben.length) zustand.aufgaben = d.aufgaben;
+  } catch (e) { /* frisch anfangen */ }
+}
+
+let punkteTimer = 0;
+function punkte(n, grund) {
+  zustand.punkte += n;
+  const el = $('#tally-pts');
+  el.textContent = zustand.punkte;
+  el.classList.add('bump');
+  clearTimeout(punkteTimer);
+  punkteTimer = setTimeout(() => el.classList.remove('bump'), 400);
+  if (grund) melde(`${grund} · +${n} Punkte`);
+  sichern();
+}
+
+let meldeTimer = 0;
+function melde(text) {
+  const t = $('#toast');
+  t.textContent = text;
+  t.classList.remove('hidden', 'pop');
+  void t.offsetWidth;
+  t.classList.add('pop');
+  clearTimeout(meldeTimer);
+  meldeTimer = setTimeout(() => t.classList.add('hidden'), 3600);
+}
+
+/* ---------------- Wortfilter (aus dem Spiel) ---------------- */
+
+function normalisiere(text) {
+  let t = text.toLowerCase();
+  t = t.replace(/ä/g, 'a').replace(/ö/g, 'o').replace(/ü/g, 'u').replace(/ß/g, 'ss');
+  t = t.normalize('NFD').replace(/[̀-ͯ]/g, '');
+  const leet = { '0':'o','1':'i','3':'e','4':'a','5':'s','7':'t','8':'b','@':'a','$':'s','!':'i','€':'e' };
+  t = t.replace(/[0134578@$!€]/g, ch => leet[ch] || ch);
+  t = t.replace(/(.)\1{2,}/g, '$1$1');
+  return t;
+}
+function istSauber(text) {
+  const norm = normalisiere(text);
+  const eng = norm.replace(/[^a-z]/g, '');
+  const kurz = eng.replace(/(.)\1+/g, '$1');
+  for (const b of BAD_SUBSTRINGS) if (eng.includes(b) || kurz.includes(b)) return false;
+  for (const w of norm.split(/[^a-z]+/).filter(Boolean)) if (BAD_WORDS.includes(w)) return false;
+  return true;
+}
+function pruefeName(name) {
+  const t = name.trim();
+  if (t.length < 2) return 'Mindestens zwei Zeichen.';
+  if (!istSauber(t)) return 'Dieser Name geht hier nicht. Nimm bitte einen anderen.';
+  const eng = normalisiere(t).replace(/[^a-z]/g, '');
+  for (const b of BAD_NAMES) if (eng.includes(b)) return 'Dieser Name ist gesperrt. Nimm bitte einen anderen.';
+  return null;
+}
+
+/* ============================================================
+   Gezeichnete Rahmen
+   ============================================================ */
+
+function strichLinie(x1, y1, x2, y2, rnd, amp) {
+  const len = Math.hypot(x2 - x1, y2 - y1);
+  const segs = Math.max(2, Math.round(len / 46));
+  const ox = (rnd() - 0.5) * 4, oy = (rnd() - 0.5) * 4;   // Überstand an den Ecken
+  let d = `M${(x1 - ox).toFixed(1)} ${(y1 - oy).toFixed(1)}`;
+  for (let i = 1; i <= segs; i++) {
+    const t = i / segs;
+    const jx = i < segs ? (rnd() - 0.5) * amp : ox;
+    const jy = i < segs ? (rnd() - 0.5) * amp : oy;
+    d += ` L${(x1 + (x2 - x1) * t + jx).toFixed(1)} ${(y1 + (y2 - y1) * t + jy).toFixed(1)}`;
+  }
+  return d;
+}
+
+/* Inhalte wachsen und schrumpfen – der gezeichnete Rahmen muss mitgehen,
+   sonst hängt er neben dem Kasten, dem er gehört. */
+let rahmenWache = null;
+function rahmenNachfuehren(el) {
+  if (el.dataset.bewacht) return;
+  el.dataset.bewacht = '1';
+  if (!rahmenWache) {
+    if (!('ResizeObserver' in window)) return;
+    rahmenWache = new ResizeObserver(eintraege => {
+      for (const e of eintraege) rahmen(e.target);
+    });
+  }
+  rahmenWache.observe(el);
+}
+
+function rahmen(el) {
+  const w = el.offsetWidth, h = el.offsetHeight;
+  if (!w || !h) return;
+  rahmenNachfuehren(el);
+  let svg = el.querySelector(':scope > .frame');
+  if (!svg) {
+    svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('class', 'frame');
+    svg.setAttribute('aria-hidden', 'true');
+    el.prepend(svg);
+  }
+  svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+  const seed = (el.dataset.seed ||= String(Math.floor(Math.random() * 1e6)));
+  const p = 3;
+  let d = '';
+  for (let pass = 0; pass < 2; pass++) {
+    const rnd = mulberry(Number(seed) + pass * 977);
+    const o = pass * 1.4;
+    d += strichLinie(p + o, p, w - p, p + o, rnd, 2.4) +
+         strichLinie(w - p, p + o, w - p - o, h - p, rnd, 2.4) +
+         strichLinie(w - p - o, h - p, p, h - p - o, rnd, 2.4) +
+         strichLinie(p, h - p - o, p + o, p, rnd, 2.4);
+  }
+  svg.innerHTML = `<path d="${d}"/>`;
+}
+
+function alleRahmen() { $$('.sketch').forEach(rahmen); }
+
+/* Überschriften einkringeln */
+function kringel() {
+  $$('.head h2').forEach((h2, i) => {
+    if (h2.querySelector('.circle')) return;
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('class', 'circle');
+    svg.setAttribute('viewBox', '0 0 200 100');
+    svg.setAttribute('preserveAspectRatio', 'none');
+    svg.setAttribute('aria-hidden', 'true');
+    svg.setAttribute('filter', 'url(#rough-hard)');
+    const rnd = mulberry(2200 + i * 31);
+    let d = 'M';
+    const n = 26;
+    for (let k = 0; k <= n; k++) {
+      const a = (k / n) * Math.PI * 2.12 - 0.4;
+      const rx = 96 + (rnd() - 0.5) * 7, ry = 46 + (rnd() - 0.5) * 7;
+      d += `${(100 + Math.cos(a) * rx).toFixed(1)} ${(50 + Math.sin(a) * ry).toFixed(1)} ${k === 0 ? 'L' : ''}`;
+    }
+    svg.innerHTML = `<path d="${d}"/>`;
+    h2.appendChild(svg);
+    const path = svg.querySelector('path');
+    const len = path.getTotalLength();
+    path.style.setProperty('--len', len);
+  });
+}
+
+/* Wortmarke zeichnen lassen */
+function wortmarke() {
+  $$('#wordmark path').forEach((p, i) => {
+    const len = p.getTotalLength();
+    p.style.setProperty('--len', len);
+    p.classList.add('draw');
+    p.style.animationDelay = (i * 0.11) + 's';
+  });
+}
+
+/* Karten neigen sich zum Zeiger */
+function neigung() {
+  $$('.tilt').forEach(el => {
+    el.addEventListener('pointermove', e => {
+      if (sanft) return;
+      const r = el.getBoundingClientRect();
+      const dx = (e.clientX - r.left) / r.width - 0.5;
+      const dy = (e.clientY - r.top) / r.height - 0.5;
+      el.style.transform = `perspective(900px) rotateX(${(-dy * 4).toFixed(2)}deg) rotateY(${(dx * 5).toFixed(2)}deg)`;
+    });
+    el.addEventListener('pointerleave', () => { el.style.transform = ''; });
+  });
+}
+
+/* ============================================================
+   Porträts – gezeichnete Gesichter
+   ============================================================ */
+
+const HAARE = [
+  'M22 40 C24 20, 76 18, 78 42 C74 30, 62 24, 50 24 C36 24, 26 30, 22 40',
+  'M22 42 C20 18, 80 16, 78 44 C78 62, 74 70, 72 76 C74 54, 68 30, 50 30 C32 30, 26 52, 28 76 C26 66, 22 60, 22 42',
+  'M20 42 C22 14, 78 16, 80 44 C74 34, 70 40, 62 32 C56 40, 44 40, 38 32 C32 40, 26 34, 20 42',
+  'M24 38 C26 16, 74 16, 76 40 C68 34, 60 44, 50 38 C42 44, 32 34, 24 38 M24 38 C18 46, 20 58, 24 62',
+  'M23 44 C20 22, 80 20, 77 46 C72 34, 64 28, 50 28 C36 28, 28 34, 23 44 M77 46 C84 54, 82 66, 78 72'
+];
+const MUENDER = ['M40 66 C46 72, 56 72, 62 65', 'M41 67 C47 70, 55 70, 60 67', 'M40 64 C46 74, 57 73, 62 63', 'M42 68 L60 66'];
+const EXTRAS = [
+  '',
+  'M28 78 C38 84, 62 84, 72 78',                                    /* Kragen */
+  'M30 50 h16 M54 50 h16 M46 51 c2 -2, 6 -2, 8 0',                   /* Brille */
+  'M26 80 C36 74, 64 74, 74 80 M50 74 L50 84',                       /* Schal */
+  'M64 30 C70 24, 78 26, 76 34'                                      /* Klammer im Haar */
+];
+
+function portraet(svg, seed, stiftHex) {
+  const rnd = mulberry(seed);
+  const haar = HAARE[Math.floor(rnd() * HAARE.length)];
+  const mund = MUENDER[Math.floor(rnd() * MUENDER.length)];
+  const extra = EXTRAS[Math.floor(rnd() * EXTRAS.length)];
+  const kopfR = 27 + rnd() * 3;
+  let kopf = 'M';
+  for (let k = 0; k <= 22; k++) {
+    const a = (k / 22) * Math.PI * 2;
+    const r = kopfR + (rnd() - 0.5) * 2.4;
+    kopf += `${(50 + Math.cos(a) * r * 0.92).toFixed(1)} ${(52 + Math.sin(a) * r).toFixed(1)} ${k === 0 ? 'L' : ''}`;
+  }
+  svg.setAttribute('viewBox', '0 0 100 100');
+  svg.innerHTML =
+    `<g fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+       <path d="${kopf}Z"/>
+       <path d="${haar}" stroke-width="2.3"/>
+       <path d="M30 88 C34 76, 66 76, 70 88" stroke-width="2"/>
+       <path d="${mund}" stroke-width="1.9"/>
+       <g class="augen">
+         <circle cx="39" cy="52" r="2.4" fill="currentColor" stroke="none"/>
+         <circle cx="61" cy="52" r="2.4" fill="currentColor" stroke="none"/>
+       </g>
+       <path d="M33 44 C36 41, 43 41, 45 44" stroke-width="1.7"/>
+       <path d="M55 44 C58 41, 65 41, 68 44" stroke-width="1.7"/>
+       ${extra ? `<path d="${extra}" stroke="${stiftHex}" stroke-width="2.2"/>` : ''}
+     </g>`;
+}
+
+/* Augen folgen dem Zeiger */
+function blickfolge(svg) {
+  const ziel = svg.querySelector('.augen');
+  if (!ziel) return;
+  const bewege = e => {
+    if (sanft) return;
+    const r = svg.getBoundingClientRect();
+    const dx = Math.max(-1, Math.min(1, (e.clientX - (r.left + r.width / 2)) / (r.width || 1) * 2));
+    const dy = Math.max(-1, Math.min(1, (e.clientY - (r.top + r.height / 2)) / (r.height || 1) * 2));
+    ziel.setAttribute('transform', `translate(${(dx * 2.6).toFixed(2)} ${(dy * 2).toFixed(2)})`);
+  };
+  window.addEventListener('pointermove', bewege, { passive: true });
+}
+
+/* ============================================================
+   01 · Profil
+   ============================================================ */
+
+function baueProfil() {
+  const sel = $('#me-country');
+  sel.innerHTML = LAENDER.map(l => `<option value="${l.id}">${l.flag} ${esc(l.name)}</option>`).join('');
+  sel.value = zustand.ich.land;
+
+  const tags = $('#me-tags');
+  tags.innerHTML = INTERESSEN.map(t =>
+    `<button class="chip" data-tag="${esc(t)}" aria-pressed="false">${esc(t)}</button>`).join('');
+
+  const farben = $('#me-colors');
+  farben.innerHTML = STIFTE.map(s =>
+    `<button class="chip" data-stift="${s.id}" aria-pressed="false" style="border-color:${s.hex}">
+       <span style="color:${s.hex}">●</span> ${s.name}</button>`).join('');
+
+  $('#me-name').value = zustand.ich.name;
+  $('#me-age').value = zustand.ich.alter;
+
+  const namensfeld = $('#me-name');
+  namensfeld.addEventListener('input', () => {
+    const hinweis = $('#me-name-hint');
+    const wert = namensfeld.value;
+    if (!wert.trim()) { hinweis.textContent = ''; hinweis.className = 'hint'; }
+    else {
+      const problem = pruefeName(wert);
+      hinweis.textContent = problem || 'Sieht gut aus.';
+      hinweis.className = 'hint ' + (problem ? 'bad' : 'good');
+    }
+    zustand.ich.name = wert;
+    zeigeProfil();
+  });
+
+  sel.addEventListener('change', () => { zustand.ich.land = sel.value; zeigeProfil(); });
+  $('#me-age').addEventListener('input', e => { zustand.ich.alter = e.target.value; zeigeProfil(); });
+
+  tags.addEventListener('click', e => {
+    const b = e.target.closest('[data-tag]');
+    if (!b) return;
+    const t = b.dataset.tag;
+    const i = zustand.ich.tags.indexOf(t);
+    if (i >= 0) zustand.ich.tags.splice(i, 1);
+    else if (zustand.ich.tags.length >= 4) { melde('Vier Interessen reichen — nimm erst eins weg.'); return; }
+    else zustand.ich.tags.push(t);
+    zeigeProfil();
+  });
+
+  farben.addEventListener('click', e => {
+    const b = e.target.closest('[data-stift]');
+    if (!b) return;
+    zustand.ich.stift = b.dataset.stift;
+    zeigeProfil();
+  });
+
+  $('#me-shuffle').addEventListener('click', () => {
+    zustand.ich.seed = Math.floor(Math.random() * 1e6);
+    zeigeProfil();
+  });
+
+  $('#me-save').addEventListener('click', () => {
+    const problem = pruefeName(zustand.ich.name || '');
+    if (problem) { $('#me-name-hint').textContent = problem; $('#me-name-hint').className = 'hint bad'; namensfeld.focus(); return; }
+    sichern();
+    melde('Profil übernommen. Du kannst jetzt schreiben und Beiträge einreichen.');
+    baueLeute();
+  });
+
+  blickfolge($('#me-portrait'));
+  zeigeProfil();
+}
+
+function stiftHex() { return (STIFTE.find(s => s.id === zustand.ich.stift) || STIFTE[0]).hex; }
+
+function zeigeProfil() {
+  const l = landVon(zustand.ich.land);
+  $('#me-shown-name').textContent = zustand.ich.name.trim() || 'Noch kein Name';
+  $('#me-shown-where').textContent = `${l.flag} ${l.name} · ${zustand.ich.alter} Jahre`;
+  $('#me-shown-tags').textContent = zustand.ich.tags.length
+    ? zustand.ich.tags.join(' · ')
+    : 'Wähle ein paar Interessen aus.';
+  $$('#me-tags [data-tag]').forEach(b =>
+    b.setAttribute('aria-pressed', zustand.ich.tags.includes(b.dataset.tag) ? 'true' : 'false'));
+  $$('#me-colors [data-stift]').forEach(b =>
+    b.setAttribute('aria-pressed', b.dataset.stift === zustand.ich.stift ? 'true' : 'false'));
+  portraet($('#me-portrait'), zustand.ich.seed, stiftHex());
+  sichern();
+}
+
+/* ============================================================
+   02 · Die Karte
+   ============================================================ */
+
+const Karte = {
+  spalten: 0, zeilen: 0, zelle: 12, groesse: {},
+  raster: [],            // [y][x] = null | Länder-id | '_'
+  mitten: {},            // id -> {x,y}
+  pfade: {},             // id -> Path2D
+  basis: null,
+  aktiv: null,           // Land unter dem Zeiger
+  figur: { x: 0, y: 0 },
+  route: null,
+  animation: 0,
+
+  bauen() {
+    const rohZeilen = EUROPE_MAP.length;
+    const rohSpalten = Math.max(...EUROPE_MAP.map(r => r.length));
+
+    // Erst das volle Raster lesen …
+    const voll = [];
+    for (let y = 0; y < rohZeilen; y++) {
+      const zeile = [];
+      const roh = EUROPE_MAP[y];
+      for (let x = 0; x < rohSpalten; x++) {
+        const z = roh[x] || '.';
+        zeile.push(z === '.' ? null : (z === '_' ? '_' : (MAP_CHARS[z] || '_')));
+      }
+      voll.push(zeile);
+    }
+
+    // … dann auf das tatsächlich bespielte Gebiet zuschneiden,
+    // damit die Karte den Rahmen ausfüllt statt in leerem Meer zu schwimmen.
+    let minX = rohSpalten, maxX = 0, minY = rohZeilen, maxY = 0;
+    for (let y = 0; y < rohZeilen; y++) for (let x = 0; x < rohSpalten; x++) {
+      if (!voll[y][x]) continue;
+      if (x < minX) minX = x; if (x > maxX) maxX = x;
+      if (y < minY) minY = y; if (y > maxY) maxY = y;
+    }
+    const rand = 2;
+    minX = Math.max(0, minX - rand); minY = Math.max(0, minY - rand);
+    maxX = Math.min(rohSpalten - 1, maxX + rand); maxY = Math.min(rohZeilen - 1, maxY + rand);
+
+    this.spalten = maxX - minX + 1;
+    this.zeilen = maxY - minY + 1;
+    this.raster = [];
+    const summen = {};
+    for (let y = 0; y < this.zeilen; y++) {
+      const zeile = [];
+      for (let x = 0; x < this.spalten; x++) {
+        const id = voll[y + minY][x + minX];
+        zeile.push(id);
+        if (id && id !== '_') {
+          (summen[id] ||= { x: 0, y: 0, n: 0 });
+          summen[id].x += x; summen[id].y += y; summen[id].n++;
+        }
+      }
+      this.raster.push(zeile);
+    }
+    this.groesse = {};
+    for (const id in summen) this.groesse[id] = summen[id].n;
+    // Landesmitte: die Landzelle, die dem Schwerpunkt am nächsten liegt
+    for (const l of LAENDER) {
+      const s = summen[l.id];
+      if (!s) continue;
+      const cx = s.x / s.n, cy = s.y / s.n;
+      let best = null, bd = Infinity;
+      for (let y = 0; y < this.zeilen; y++) for (let x = 0; x < this.spalten; x++) {
+        if (this.raster[y][x] !== l.id) continue;
+        const d = (x - cx) ** 2 + (y - cy) ** 2;
+        if (d < bd) { bd = d; best = { x, y }; }
+      }
+      this.mitten[l.id] = best;
+      const p = new Path2D();
+      for (let y = 0; y < this.zeilen; y++) for (let x = 0; x < this.spalten; x++) {
+        if (this.raster[y][x] === l.id) p.rect(x * this.zelle, y * this.zelle, this.zelle, this.zelle);
+      }
+      this.pfade[l.id] = p;
+    }
+    const start = this.mitten[zustand.ich.land] || this.mitten.de;
+    this.figur = { x: start.x, y: start.y };
+  },
+
+  istLand(x, y) {
+    if (x < 0 || y < 0 || x >= this.spalten || y >= this.zeilen) return false;
+    return this.raster[y][x] !== null;
+  },
+
+  basisZeichnen() {
+    const b = document.createElement('canvas');
+    b.width = this.spalten * this.zelle;
+    b.height = this.zeilen * this.zelle;
+    const c = b.getContext('2d');
+    const tinte = css('--ink'), papier2 = css('--paper-2'), leise = css('--ink-faint');
+    const dunkel = document.documentElement.dataset.theme === 'dark' ||
+      (!document.documentElement.dataset.theme && matchMedia('(prefers-color-scheme: dark)').matches);
+
+    // Landflächen als leichte Lasur in der Farbe des Landes
+    for (let y = 0; y < this.zeilen; y++) for (let x = 0; x < this.spalten; x++) {
+      const id = this.raster[y][x];
+      if (!id) continue;
+      const l = id === '_' ? null : landVon(id);
+      c.fillStyle = l
+        ? (dunkel ? `hsl(${l.hue} 30% 26% / .55)` : `hsl(${l.hue} 42% 88% / .55)`)
+        : (dunkel ? 'hsl(210 8% 30% / .35)' : 'hsl(210 12% 88% / .5)');
+      c.fillRect(x * this.zelle, y * this.zelle, this.zelle, this.zelle);
+    }
+
+    // Landesgrenzen: feine gestrichelte Linien
+    c.strokeStyle = leise; c.lineWidth = 0.8; c.setLineDash([3, 3]);
+    c.beginPath();
+    for (let y = 0; y < this.zeilen; y++) for (let x = 0; x < this.spalten; x++) {
+      const id = this.raster[y][x];
+      if (!id) continue;
+      const px = x * this.zelle, py = y * this.zelle;
+      if (this.istLand(x + 1, y) && this.raster[y][x + 1] !== id) { c.moveTo(px + this.zelle, py); c.lineTo(px + this.zelle, py + this.zelle); }
+      if (this.istLand(x, y + 1) && this.raster[y + 1][x] !== id) { c.moveTo(px, py + this.zelle); c.lineTo(px + this.zelle, py + this.zelle); }
+    }
+    c.stroke();
+    c.setLineDash([]);
+
+    // Küstenlinie: mit leichtem Zittern gezeichnet
+    const rnd = mulberry(90210);
+    const w = (a, b) => a + (rnd() - 0.5) * b;
+    c.strokeStyle = tinte; c.lineWidth = 1.5; c.lineCap = 'round';
+    c.beginPath();
+    for (let y = 0; y < this.zeilen; y++) for (let x = 0; x < this.spalten; x++) {
+      if (!this.istLand(x, y)) continue;
+      const px = x * this.zelle, py = y * this.zelle, s = this.zelle;
+      if (!this.istLand(x, y - 1)) { c.moveTo(w(px, 1.6), w(py, 1.6)); c.lineTo(w(px + s, 1.6), w(py, 1.6)); }
+      if (!this.istLand(x, y + 1)) { c.moveTo(w(px, 1.6), w(py + s, 1.6)); c.lineTo(w(px + s, 1.6), w(py + s, 1.6)); }
+      if (!this.istLand(x - 1, y)) { c.moveTo(w(px, 1.6), w(py, 1.6)); c.lineTo(w(px, 1.6), w(py + s, 1.6)); }
+      if (!this.istLand(x + 1, y)) { c.moveTo(w(px + s, 1.6), w(py, 1.6)); c.lineTo(w(px + s, 1.6), w(py + s, 1.6)); }
+    }
+    c.stroke();
+
+    // Fährlinien zwischen den Inseln
+    c.strokeStyle = leise; c.lineWidth = 1; c.setLineDash([2, 5]);
+    c.beginPath();
+    for (const [a, bId] of FAEHREN) {
+      const p = this.mitten[a], q = this.mitten[bId];
+      if (!p || !q) continue;
+      c.moveTo(p.x * this.zelle + 5, p.y * this.zelle + 5);
+      c.lineTo(q.x * this.zelle + 5, q.y * this.zelle + 5);
+    }
+    c.stroke();
+    c.setLineDash([]);
+
+    this.basis = b;
+  },
+
+  zeichnen() {
+    const cv = $('#map');
+    const c = cv.getContext('2d');
+    const tinte = css('--ink'), stift = css('--pen'), leise = css('--ink-faint'), rot = css('--red');
+    c.clearRect(0, 0, cv.width, cv.height);
+    if (this.basis) c.drawImage(this.basis, 0, 0);
+
+    // Schraffur des Landes unter dem Zeiger
+    if (this.aktiv && this.pfade[this.aktiv]) {
+      c.save();
+      c.clip(this.pfade[this.aktiv]);
+      c.fillStyle = stift; c.globalAlpha = 0.12;
+      c.fillRect(0, 0, cv.width, cv.height);
+      c.globalAlpha = 0.6;
+      c.strokeStyle = stift; c.lineWidth = 1.3;
+      c.beginPath();
+      for (let i = -cv.height; i < cv.width; i += 7) { c.moveTo(i, 0); c.lineTo(i + cv.height, cv.height); }
+      c.stroke();
+      c.restore();
+    }
+
+    // Wahrzeichen und Namen
+    c.textAlign = 'center';
+    for (const l of LAENDER) {
+      const m = this.mitten[l.id];
+      if (!m) continue;
+      const px = m.x * this.zelle + this.zelle / 2, py = m.y * this.zelle + this.zelle / 2;
+      const dran = this.aktiv === l.id;
+      const dort = zustand.gesehen.includes(l.id);
+      c.strokeStyle = dort ? css('--green') : tinte;
+      c.fillStyle = dort ? css('--green') : tinte;
+      c.lineWidth = 1.4;
+      c.beginPath(); c.arc(px, py, dran ? 5.5 : 4, 0, Math.PI * 2); c.stroke();
+      if (dort) { c.beginPath(); c.arc(px, py, 2, 0, Math.PI * 2); c.fill(); }
+      // In dicht bebauten Ecken würden alle Namen übereinanderliegen –
+      // kleine Länder beschriften sich erst, wenn man sie anfährt.
+      const grossGenug = (this.groesse[l.id] || 0) >= 55;
+      if (!dran && !dort && !grossGenug) continue;
+      c.font = `${dran ? '700 ' : ''}11px ui-monospace, monospace`;
+      c.fillStyle = dran ? tinte : leise;
+      c.fillText(l.name.toUpperCase(), px, py - 9);
+      if (dran) {
+        c.font = '10px ui-monospace, monospace';
+        c.fillStyle = stift;
+        c.fillText(l.wz, px, py + 18);
+      }
+    }
+
+    // Gelaufene Strecke
+    if (this.route) {
+      c.strokeStyle = rot; c.lineWidth = 1.6; c.setLineDash([4, 4]); c.globalAlpha = 0.8;
+      c.beginPath();
+      c.moveTo(this.route.von.x * this.zelle + 5, this.route.von.y * this.zelle + 5);
+      c.lineTo(this.figur.x * this.zelle + 5, this.figur.y * this.zelle + 5);
+      c.stroke();
+      c.setLineDash([]); c.globalAlpha = 1;
+    }
+
+    // Die eigene Figur – ein Strichmännchen
+    const fx = this.figur.x * this.zelle + 5, fy = this.figur.y * this.zelle + 5;
+    c.strokeStyle = stiftHex(); c.fillStyle = stiftHex(); c.lineWidth = 1.8; c.lineCap = 'round';
+    c.beginPath();
+    c.arc(fx, fy - 8, 3, 0, Math.PI * 2); c.stroke();
+    c.beginPath();
+    c.moveTo(fx, fy - 5); c.lineTo(fx, fy + 2);
+    c.moveTo(fx - 4, fy - 2); c.lineTo(fx + 4, fy - 2);
+    c.moveTo(fx, fy + 2); c.lineTo(fx - 3.5, fy + 7);
+    c.moveTo(fx, fy + 2); c.lineTo(fx + 3.5, fy + 7);
+    c.stroke();
+  },
+
+  zelleAus(e) {
+    const cv = $('#map');
+    const r = cv.getBoundingClientRect();
+    const x = Math.floor((e.clientX - r.left) / r.width * this.spalten);
+    const y = Math.floor((e.clientY - r.top) / r.height * this.zeilen);
+    return { x, y };
+  },
+
+  gehZu(x, y) {
+    if (!this.istLand(x, y)) return;
+    this.route = { von: { ...this.figur } };
+    const von = { ...this.figur }, ziel = { x, y };
+    const start = performance.now(), dauer = sanft ? 1 : 520;
+    cancelAnimationFrame(this.animation);
+    const schritt = t => {
+      const p = Math.min(1, (t - start) / dauer);
+      const e = 1 - Math.pow(1 - p, 3);
+      this.figur.x = von.x + (ziel.x - von.x) * e;
+      this.figur.y = von.y + (ziel.y - von.y) * e;
+      this.zeichnen();
+      if (p < 1) this.animation = requestAnimationFrame(schritt);
+      else { this.figur = ziel; this.route = null; this.zeichnen(); this.angekommen(); }
+    };
+    this.animation = requestAnimationFrame(schritt);
+  },
+
+  angekommen() {
+    const id = this.raster[Math.round(this.figur.y)]?.[Math.round(this.figur.x)];
+    $('#map-coords').textContent = `X ${Math.round(this.figur.x)} · Y ${Math.round(this.figur.y)}`;
+    if (!id || id === '_') { $('#map-where').textContent = 'Zwischen den Ländern'; return; }
+    const l = landVon(id);
+    $('#map-where').textContent = `${l.flag} ${l.name}`;
+    const m = this.mitten[id];
+    const nah = Math.abs(this.figur.x - m.x) <= 3 && Math.abs(this.figur.y - m.y) <= 3;
+    if (nah && !zustand.gesehen.includes(id)) {
+      zustand.gesehen.push(id);
+      punkte(2, `${l.wz} erreicht`);
+      zeigeFortschritt();
+      this.zeichnen();
+    }
+    zeigeSteckbrief(id);
+  }
+};
+
+function zeigeFortschritt() {
+  $('#seen-count').textContent = zustand.gesehen.length;
+  $('#seen-list').textContent = zustand.gesehen.length
+    ? zustand.gesehen.map(id => landVon(id).flag + ' ' + landVon(id).name).join(' · ')
+    : 'Noch keins.';
+}
+
+function zeigeSteckbrief(id) {
+  const l = landVon(id);
+  const d = $('#dossier');
+  const gemacht = zustand.quizFertig.includes(id);
+  d.innerHTML = `
+    <div class="flagline"><span class="fl">${l.flag}</span><h3>${esc(l.name)}</h3></div>
+    <dl>
+      <dt>Hauptstadt</dt><dd>${esc(l.hauptstadt)}</dd>
+      <dt>Wahrzeichen</dt><dd>${esc(l.wz)}</dd>
+      <dt>Dazu</dt><dd>${esc(l.wzInfo)}</dd>
+      <dt>Gut zu wissen</dt><dd>${esc(l.fakt)}</dd>
+      <dt>Vor Ort</dt><dd><button class="btn small ghost" data-schreib="${l.id}">${esc(l.person.name)}, ${l.person.alter} — schreiben</button></dd>
+    </dl>
+    <div class="quiz" style="margin-top:1rem">
+      <p class="note">Frage dazu</p>
+      <p style="margin:.35rem 0 .6rem"><b>${esc(l.quiz.f)}</b></p>
+      <div class="row" id="quiz-antworten"></div>
+      <p class="hint" id="quiz-hint">${gemacht ? 'Schon beantwortet.' : ''}</p>
+    </div>`;
+  rahmen(d);
+
+  const box = $('#quiz-antworten');
+  const antworten = [l.quiz.r, ...l.quiz.w].map(v => ({ v, s: Math.random() })).sort((a, b) => a.s - b.s);
+  let versuch = 0;
+  antworten.forEach(({ v }) => {
+    const b = document.createElement('button');
+    b.className = 'chip';
+    b.textContent = v;
+    b.disabled = gemacht;
+    b.addEventListener('click', () => {
+      if (v === l.quiz.r) {
+        b.style.borderColor = css('--green'); b.style.color = css('--green');
+        $$('#quiz-antworten .chip').forEach(x => x.disabled = true);
+        if (!zustand.quizFertig.includes(id)) {
+          zustand.quizFertig.push(id);
+          punkte(versuch === 0 ? 3 : 1, 'Frage richtig beantwortet');
+        }
+        $('#quiz-hint').textContent = versuch === 0 ? 'Richtig, auf Anhieb.' : 'Richtig.';
+        $('#quiz-hint').className = 'hint good';
+      } else {
+        versuch++;
+        b.disabled = true;
+        b.style.opacity = '.4';
+        $('#quiz-hint').textContent = 'Nicht ganz. Versuch es nochmal.';
+        $('#quiz-hint').className = 'hint bad';
+      }
+    });
+    box.appendChild(b);
+  });
+
+  const schreib = d.querySelector('[data-schreib]');
+  if (schreib) schreib.addEventListener('click', () => {
+    oeffneGespraech('person:' + l.id);
+    $('#leute').scrollIntoView({ behavior: sanft ? 'auto' : 'smooth', block: 'start' });
+  });
+}
+
+function baueKarte() {
+  const cv = $('#map');
+  Karte.bauen();
+  cv.width = Karte.spalten * Karte.zelle;
+  cv.height = Karte.zeilen * Karte.zelle;
+  Karte.basisZeichnen();
+  Karte.zeichnen();
+  zeigeFortschritt();
+  zeigeSteckbrief(zustand.ich.land);
+
+  const tip = $('#map-tip');
+  cv.addEventListener('pointermove', e => {
+    const { x, y } = Karte.zelleAus(e);
+    $('#map-coords').textContent = `X ${x} · Y ${y}`;
+    const id = Karte.raster[y]?.[x];
+    const land = id && id !== '_' ? id : null;
+    if (land !== Karte.aktiv) {
+      Karte.aktiv = land;
+      Karte.zeichnen();
+    }
+    if (land) {
+      const l = landVon(land);
+      const r = cv.getBoundingClientRect();
+      tip.innerHTML = `${l.flag} ${esc(l.name)}<em>${esc(l.person.name)} · ${esc(l.wz)}</em>`;
+      tip.style.left = (e.clientX - r.left) + 'px';
+      tip.style.top = (e.clientY - r.top) + 'px';
+      tip.classList.remove('hidden');
+    } else tip.classList.add('hidden');
+  });
+  cv.addEventListener('pointerleave', () => {
+    tip.classList.add('hidden');
+    if (Karte.aktiv) { Karte.aktiv = null; Karte.zeichnen(); }
+  });
+  cv.addEventListener('click', e => {
+    const { x, y } = Karte.zelleAus(e);
+    cv.focus();
+    Karte.gehZu(x, y);
+  });
+  cv.addEventListener('keydown', e => {
+    const schritte = { ArrowUp: [0, -1], ArrowDown: [0, 1], ArrowLeft: [-1, 0], ArrowRight: [1, 0],
+                       w: [0, -1], s: [0, 1], a: [-1, 0], d: [1, 0] };
+    const s = schritte[e.key];
+    if (!s) return;
+    e.preventDefault();
+    const nx = Math.round(Karte.figur.x) + s[0], ny = Math.round(Karte.figur.y) + s[1];
+    if (!Karte.istLand(nx, ny)) return;
+    Karte.figur = { x: nx, y: ny };
+    Karte.zeichnen();
+    Karte.angekommen();
+  });
+
+  matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+    Karte.basisZeichnen(); Karte.zeichnen();
+  });
+}
+
+/* ============================================================
+   03 · Leute treffen
+   ============================================================ */
+
+function alleLeute() {
+  const liste = LAENDER.map(l => ({
+    schluessel: 'person:' + l.id,
+    art: 'schueler',
+    name: l.person.name,
+    ort: l.person.ort,
+    land: l.id,
+    zusatz: `${l.person.alter} Jahre`,
+    kurz: l.person.kurz,
+    tags: l.person.tags
+  }));
+  LEHRKRAEFTE.forEach((t, i) => liste.push({
+    schluessel: 'lehr:' + i,
+    art: 'lehr',
+    name: t.name,
+    ort: t.ort,
+    land: t.land,
+    zusatz: t.fach,
+    kurz: t.kurz,
+    tags: []
+  }));
+  return liste;
+}
+
+let filterArt = 'alle';
+
+function baueLeute() {
+  const box = $('#people');
+  const leute = alleLeute().filter(p => filterArt === 'alle' || p.art === filterArt);
+  box.innerHTML = '';
+  leute.forEach((p, i) => {
+    const l = landVon(p.land);
+    // Bewusst kein <button>: dessen Innenlayout bricht im Raster aus dem
+    // gezeichneten Rahmen aus.
+    const el = document.createElement('div');
+    el.className = 'person sketch';
+    el.setAttribute('role', 'button');
+    el.setAttribute('tabindex', '0');
+    el.dataset.wer = p.schluessel;
+    el.innerHTML =
+      `<svg class="por" viewBox="0 0 100 100" style="color:var(--ink)"></svg>
+       <span class="name">${esc(p.name)}</span>
+       <span class="where">${l.flag} ${esc(p.ort)}</span>
+       <span class="say"><b>${esc(p.zusatz)}</b>${p.tags.length ? ' · ' + esc(p.tags.join(', ')) : ''}<br>${esc(p.kurz)}</span>
+       ${p.art === 'lehr' ? '<span class="tag">Lehrkraft</span>' : ''}`;
+    box.appendChild(el);
+    portraet(el.querySelector('svg'), 8000 + i * 137 + p.name.length * 13, STIFTE[i % STIFTE.length].hex);
+    rahmen(el);
+  });
+  box.querySelectorAll('.person').forEach(el => {
+    el.addEventListener('click', () => oeffneGespraech(el.dataset.wer));
+    el.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); oeffneGespraech(el.dataset.wer); }
+    });
+  });
+}
+
+const Gespraech = { wer: null, daten: null };
+
+function oeffneGespraech(schluessel) {
+  const p = alleLeute().find(x => x.schluessel === schluessel);
+  if (!p) return;
+  Gespraech.wer = schluessel;
+  Gespraech.daten = p;
+  const l = landVon(p.land);
+  $('#talk-name').textContent = p.name;
+  $('#talk-where').textContent = `${l.flag} ${l.name} · ${p.zusatz}`;
+  portraet($('#talk-face'), 8000 + alleLeute().findIndex(x => x.schluessel === schluessel) * 137 + p.name.length * 13, stiftHex());
+  $('#talk-log').innerHTML = '';
+  $('#talk-input').disabled = false;
+  $('#talk-send').disabled = false;
+  $$('.person').forEach(el => el.classList.toggle('open', el.dataset.wer === schluessel));
+
+  sage('sys', 'Jedes Gespräch beginnt mit „hey EU“');
+  sage('me', 'hey EU!');
+  if (p.art === 'lehr') {
+    const t = LEHRKRAEFTE[Number(schluessel.split(':')[1])];
+    antworte(t.hallo);
+    schnellantworten([
+      ['Welche Aufgaben gibt es?', () => antworte(aufgabenText())],
+      ['Wie läuft die Prüfung ab?', () => antworte('Du reichst ein, ich lese es und gebe es frei oder schicke es mit einer Notiz zurück. Bis dahin sieht es niemand außer mir.')],
+      ['Wer sieht meine Beiträge?', () => antworte('Vor der Freigabe nur die Lehrkräfte. Danach alle, die hier angemeldet sind — dein Klarname steht nirgends, nur dein Anzeigename.')],
+      ['Danke, bis dann', beenden]
+    ]);
+  } else {
+    const anrede = zustand.ich.name.trim() ? `, ${zustand.ich.name.trim()}` : '';
+    antworte(`hey EU! Ich bin ${p.name} aus ${p.ort}. Schön, dass du schreibst${anrede}.`);
+    schuelerAntworten();
+  }
+}
+
+function schuelerAntworten() {
+  schnellantworten([
+    ['Wie ist es bei euch?', () => antwortThema('land')],
+    ['Wie läuft eure Schule?', () => antwortThema('alltag')],
+    ['Was machst du sonst?', () => antwortThema('freizeit')],
+    ['Was esst ihr?', () => antwortThema('essen')],
+    ['Bis dann', beenden]
+  ]);
+}
+
+function antwortThema(thema) {
+  const p = Gespraech.daten;
+  const l = landVon(p.land);
+  const fragen = { land: 'Wie ist es bei euch?', alltag: 'Wie läuft eure Schule?',
+                   freizeit: 'Was machst du sonst?', essen: 'Was esst ihr?' };
+  sage('me', fragen[thema]);
+  antworte(l.person[thema]);
+  schuelerAntworten();
+}
+
+function beenden() {
+  sage('me', 'Bis dann');
+  const abschied = ['Bis bald! Schreib wieder, wenn du in der Nähe bist.',
+                    'Ciao. Und schau dir die Aufgaben an, da ist gerade was Gutes dabei.',
+                    'Tschüss! Grüß die anderen von mir.'];
+  antworte(abschied[Math.floor(Math.random() * abschied.length)]);
+  schnellantworten([]);
+}
+
+function aufgabenText() {
+  const offen = zustand.aufgaben.filter(a => !zustand.beitraege.some(b => b.aufgabe === a.id && b.status !== 'abgelehnt'));
+  if (!offen.length) return 'Du hast zu allem schon etwas eingereicht. Respekt — dann warte kurz auf die Freigaben.';
+  return `Gerade offen: ${offen.slice(0, 3).map(a => '„' + a.titel + '“').join(', ')}. Insgesamt sind es ${offen.length}.`;
+}
+
+function sage(wer, text) {
+  const log = $('#talk-log');
+  const p = document.createElement('p');
+  p.className = 'said ' + wer;
+  p.textContent = text;
+  log.appendChild(p);
+  log.scrollTop = log.scrollHeight;
+  return p;
+}
+
+function antworte(text) {
+  const log = $('#talk-log');
+  const tippt = document.createElement('p');
+  tippt.className = 'said them typing';
+  tippt.textContent = '···';
+  log.appendChild(tippt);
+  log.scrollTop = log.scrollHeight;
+  setTimeout(() => {
+    tippt.remove();
+    sage('them', text);
+  }, sanft ? 10 : 400 + Math.min(text.length * 7, 900));
+}
+
+function schnellantworten(paare) {
+  const box = $('#talk-quick');
+  box.innerHTML = '';
+  paare.forEach(([label, fn]) => {
+    const b = document.createElement('button');
+    b.className = 'chip';
+    b.textContent = label;
+    b.addEventListener('click', fn);
+    box.appendChild(b);
+  });
+}
+
+function freierText(text) {
+  const p = Gespraech.daten;
+  const l = landVon(p.land);
+  const t = text.toLowerCase();
+  if (p.art === 'lehr') {
+    if (/aufgab|task|einreich/.test(t)) return aufgabenText();
+    if (/pr(ü|u)f|freigab|admin/.test(t)) return 'Ich lese alles selbst. Freigabe oder Rückfrage kommt meist am selben Tag.';
+    if (/tsch(ü|u)ss|bye|danke/.test(t)) return 'Gern. Melde dich, wenn etwas hakt.';
+    return 'Gute Frage. Schreib sie ruhig ausführlicher auf, dann kann ich sie im Unterricht aufgreifen.';
+  }
+  if (/tsch(ü|u)ss|bye|ciao|bis dann/.test(t)) return 'Bis bald! War gut, mit dir zu schreiben.';
+  if (/ess|koch|gericht|food|hunger/.test(t)) return l.person.essen;
+  if (/schule|unterricht|noten|abi|pr(ü|u)fung|lernen/.test(t)) return l.person.alltag;
+  if (/freizeit|hobby|sport|musik|machst du/.test(t)) return l.person.freizeit;
+  if (/land|stadt|wohnst|zuhause|bei euch/.test(t)) return l.person.land;
+  if (/hallo|hi|hey|moin|servus/.test(t)) return `hey EU! Alles gut bei dir?`;
+  if (/wie alt|alter/.test(t)) return `Ich bin ${l.person.alter}. Und du?`;
+  if (t.includes('?')) return l.person.land;
+  const smalltalk = [
+    'Warst du schon in anderen Ländern auf der Karte unterwegs?',
+    'Bei uns reden gerade alle über die Aufgabe mit dem Schulweg. Hast du die schon?',
+    'Ich versuche, ein paar Wörter in anderen Sprachen zu lernen. Sag mir eins aus deiner.',
+    'Erzähl mal was von dir — ich schreibe hier sonst nur über mich.'
+  ];
+  return smalltalk[Math.floor(Math.random() * smalltalk.length)];
+}
+
+function baueGespraech() {
+  $('#talk-form').addEventListener('submit', e => {
+    e.preventDefault();
+    const feld = $('#talk-input');
+    const text = feld.value.trim();
+    if (!text || !Gespraech.daten) return;
+    const hinweis = $('#talk-hint');
+    if (!istSauber(text)) {
+      hinweis.textContent = 'Diese Nachricht wurde vom Filter gestoppt. Formulier sie bitte anders.';
+      hinweis.className = 'hint bad';
+      return;
+    }
+    hinweis.textContent = '';
+    hinweis.className = 'hint';
+    sage('me', text);
+    feld.value = '';
+    antworte(freierText(text));
+  });
+
+  $$('[data-filter]').forEach(b => b.addEventListener('click', () => {
+    filterArt = b.dataset.filter;
+    $$('[data-filter]').forEach(x => x.setAttribute('aria-pressed', x === b ? 'true' : 'false'));
+    baueLeute();
+  }));
+}
+
+/* ============================================================
+   04 · Aufgaben
+   ============================================================ */
+
+let offeneAufgabe = null;
+let angehaengtesBild = null;
+
+function beitragZu(aufgabeId) {
+  return zustand.beitraege.find(b => b.aufgabe === aufgabeId && b.status !== 'abgelehnt');
+}
+
+function baueAufgaben() {
+  const box = $('#tasks');
+  box.innerHTML = '';
+  const sichtbar = zustand.aufgaben.filter(a => !a.land || a.land === zustand.ich.land);
+  $('#tasks-count').textContent =
+    `${sichtbar.length} Aufgaben für dich · ${zustand.aufgaben.length} insgesamt eingestellt`;
+
+  sichtbar.forEach(a => {
+    const b = beitragZu(a.id);
+    const el = document.createElement('article');
+    el.className = 'sticky';
+    const stand = b
+      ? (b.status === 'wartet'
+        ? '<span class="badge wait">in Prüfung</span>'
+        : '<span class="badge ok">freigegeben</span>')
+      : '';
+    el.innerHTML =
+      `<span class="pin"></span>
+       <h4>${esc(a.titel)}</h4>
+       <p>${esc(a.text)}</p>
+       <div class="foot">
+         <span class="badge">${a.punkte} Punkte</span>
+         ${a.land ? `<span class="badge">${landVon(a.land).flag} ${esc(landVon(a.land).name)}</span>` : ''}
+         ${stand}
+       </div>
+       <span class="by">eingestellt von ${esc(a.von)}</span>`;
+    if (!b) {
+      const btn = document.createElement('button');
+      btn.className = 'btn small pen';
+      btn.textContent = 'Bearbeiten';
+      btn.addEventListener('click', () => oeffneEinreichen(a));
+      el.querySelector('.foot').appendChild(btn);
+    }
+    if (zustand.lehrkraft) {
+      const del = document.createElement('button');
+      del.className = 'btn small ghost';
+      del.textContent = 'Zurückziehen';
+      del.addEventListener('click', () => {
+        zustand.aufgaben = zustand.aufgaben.filter(x => x.id !== a.id);
+        sichern(); baueAufgaben();
+        melde('Aufgabe zurückgezogen.');
+      });
+      el.querySelector('.foot').appendChild(del);
+    }
+    box.appendChild(el);
+  });
+
+  zeigeVeroeffentlicht();
+  zeigePruefung();
+}
+
+function oeffneEinreichen(a) {
+  if (!zustand.ich.name.trim()) {
+    melde('Leg zuerst oben dein Profil an — sonst weiß niemand, von wem der Beitrag ist.');
+    $('#profil').scrollIntoView({ behavior: sanft ? 'auto' : 'smooth' });
+    return;
+  }
+  offeneAufgabe = a;
+  angehaengtesBild = null;
+  $('#submit-title').textContent = a.titel;
+  $('#submit-desc').textContent = a.text;
+  $('#submit-text').value = '';
+  $('#submit-hint').textContent = '';
+  $('#sub-preview').classList.add('hidden');
+  $('#submit-photo').value = '';
+  const karte = $('#submit-card');
+  karte.classList.remove('hidden');
+  rahmen(karte);
+  karte.scrollIntoView({ behavior: sanft ? 'auto' : 'smooth', block: 'center' });
+  $('#submit-text').focus();
+}
+
+function baueEinreichen() {
+  $('#submit-cancel').addEventListener('click', () => $('#submit-card').classList.add('hidden'));
+
+  $('#submit-photo').addEventListener('change', e => {
+    const datei = e.target.files && e.target.files[0];
+    if (!datei) return;
+    const leser = new FileReader();
+    leser.onload = () => {
+      const bild = new Image();
+      bild.onload = () => {
+        const max = 520;
+        const f = Math.min(1, max / Math.max(bild.width, bild.height));
+        const cv = document.createElement('canvas');
+        cv.width = Math.round(bild.width * f);
+        cv.height = Math.round(bild.height * f);
+        cv.getContext('2d').drawImage(bild, 0, 0, cv.width, cv.height);
+        angehaengtesBild = cv.toDataURL('image/jpeg', 0.72);
+        const v = $('#sub-preview');
+        v.src = angehaengtesBild;
+        v.classList.remove('hidden');
+      };
+      bild.src = leser.result;
+    };
+    leser.readAsDataURL(datei);
+  });
+
+  $('#submit-send').addEventListener('click', () => {
+    const text = $('#submit-text').value.trim();
+    const hinweis = $('#submit-hint');
+    if (!text && !angehaengtesBild) {
+      hinweis.textContent = 'Schreib etwas oder häng ein Bild an.';
+      hinweis.className = 'hint bad';
+      return;
+    }
+    if (text && !istSauber(text)) {
+      hinweis.textContent = 'Der Filter hat etwas beanstandet. Formulier den Text bitte anders.';
+      hinweis.className = 'hint bad';
+      return;
+    }
+    zustand.beitraege.push({
+      id: 'b' + Date.now(),
+      aufgabe: offeneAufgabe.id,
+      titel: offeneAufgabe.titel,
+      punkte: offeneAufgabe.punkte,
+      von: zustand.ich.name.trim(),
+      land: zustand.ich.land,
+      text, bild: angehaengtesBild,
+      status: 'wartet',
+      datum: new Date().toLocaleDateString('de-DE')
+    });
+    sichern();
+    $('#submit-card').classList.add('hidden');
+    baueAufgaben();
+    melde('Eingereicht. Eine Lehrkraft schaut sich das an.');
+  });
+}
+
+function zeigeVeroeffentlicht() {
+  const box = $('#published');
+  const frei = zustand.beitraege.filter(b => b.status === 'frei');
+  if (!frei.length) {
+    box.innerHTML = '<p class="tiny soft">Noch nichts freigegeben. Was du einreichst, erscheint hier, sobald eine Lehrkraft es geprüft hat.</p>';
+    return;
+  }
+  box.innerHTML = frei.map(b => `
+    <article class="entry">
+      <span class="meta">${esc(b.titel)} · ${landVon(b.land).flag} ${esc(b.von)} · ${esc(b.datum)}</span>
+      ${b.bild ? `<img src="${b.bild}" alt="Beitrag von ${esc(b.von)}">` : ''}
+      ${b.text ? `<p>${esc(b.text)}</p>` : ''}
+      ${b.notiz ? `<p class="tiny soft">Anmerkung: ${esc(b.notiz)}</p>` : ''}
+    </article>`).join('');
+}
+
+/* ============================================================
+   05 · Lehrkräfte-Bereich
+   ============================================================ */
+
+function baueLehrkraft() {
+  const sel = $('#nt-country');
+  sel.innerHTML = '<option value="">Alle Länder</option>' +
+    LAENDER.map(l => `<option value="${l.id}">${l.flag} ${esc(l.name)}</option>`).join('');
+
+  $('#pin-ok').addEventListener('click', pruefePin);
+  $('#pin').addEventListener('keydown', e => { if (e.key === 'Enter') pruefePin(); });
+
+  $('#teacher-out').addEventListener('click', () => {
+    zustand.lehrkraft = false;
+    $('#teacher-area').classList.add('hidden');
+    $('#lock-card').classList.remove('hidden');
+    $('#pin').value = '';
+    setzeRolle('schueler');
+    baueAufgaben();
+    melde('Abgemeldet.');
+  });
+
+  $('#nt-add').addEventListener('click', () => {
+    const titel = $('#nt-title').value.trim();
+    const text = $('#nt-desc').value.trim();
+    const hinweis = $('#nt-hint');
+    if (titel.length < 4 || text.length < 10) {
+      hinweis.textContent = 'Titel und Aufgabenstellung dürfen nicht zu kurz sein.';
+      hinweis.className = 'hint bad';
+      return;
+    }
+    if (!istSauber(titel) || !istSauber(text)) {
+      hinweis.textContent = 'Der Filter hat etwas beanstandet.';
+      hinweis.className = 'hint bad';
+      return;
+    }
+    zustand.aufgaben.unshift({
+      id: 'eigen-' + Date.now(),
+      land: $('#nt-country').value || null,
+      titel, text,
+      punkte: Math.max(1, Math.min(20, Number($('#nt-points').value) || 5)),
+      von: 'Lehrkraft (du)'
+    });
+    sichern();
+    $('#nt-title').value = ''; $('#nt-desc').value = '';
+    hinweis.textContent = 'Veröffentlicht — die Aufgabe hängt jetzt an der Wand.';
+    hinweis.className = 'hint good';
+    baueAufgaben();
+    melde('Aufgabe eingestellt.');
+  });
+}
+
+function pruefePin() {
+  const hinweis = $('#pin-hint');
+  if ($('#pin').value === LEHRER_PIN) {
+    zustand.lehrkraft = true;
+    $('#lock-card').classList.add('hidden');
+    const bereich = $('#teacher-area');
+    bereich.classList.remove('hidden');
+    $$('.sketch', bereich).forEach(rahmen);
+    hinweis.textContent = '';
+    setzeRolle('lehr');
+    baueAufgaben();
+    melde('Angemeldet. Du kannst Aufgaben einstellen und Beiträge prüfen.');
+  } else {
+    hinweis.textContent = 'Falsche PIN.';
+    hinweis.className = 'hint bad';
+    const s = $('#lock-shackle');
+    s.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(-3px)' },
+               { transform: 'translateX(3px)' }, { transform: 'translateX(0)' }],
+              { duration: 260, iterations: 2 });
+  }
+}
+
+function zeigePruefung() {
+  const box = $('#review');
+  if (!box) return;
+  const wartend = zustand.beitraege.filter(b => b.status === 'wartet');
+  $('#review-count').textContent = wartend.length
+    ? `${wartend.length} wartet auf Prüfung`
+    : 'nichts offen';
+  if (!wartend.length) {
+    box.innerHTML = '<p class="tiny soft">Keine offenen Beiträge.</p>';
+    return;
+  }
+  box.innerHTML = '';
+  wartend.forEach(b => {
+    const el = document.createElement('article');
+    el.className = 'entry';
+    el.innerHTML =
+      `<span class="meta">${esc(b.titel)} · ${landVon(b.land).flag} ${esc(b.von)} · ${esc(b.datum)} · ${b.punkte} Punkte</span>
+       ${b.bild ? `<img src="${b.bild}" alt="Eingereichtes Bild">` : ''}
+       ${b.text ? `<p>${esc(b.text)}</p>` : ''}
+       <div class="field"><label for="n-${b.id}">Anmerkung (wird mitgeschickt)</label>
+         <input type="text" id="n-${b.id}" maxlength="140" placeholder="optional"></div>
+       <div class="acts"></div>`;
+    const acts = el.querySelector('.acts');
+
+    const ok = document.createElement('button');
+    ok.className = 'btn small ok';
+    ok.textContent = 'Freigeben';
+    ok.addEventListener('click', () => {
+      b.status = 'frei';
+      b.notiz = $('#n-' + b.id).value.trim() || '';
+      punkte(b.punkte, `Beitrag „${b.titel}“ freigegeben`);
+      baueAufgaben();
+    });
+
+    const nein = document.createElement('button');
+    nein.className = 'btn small no';
+    nein.textContent = 'Zurückgeben';
+    nein.addEventListener('click', () => {
+      b.status = 'abgelehnt';
+      b.notiz = $('#n-' + b.id).value.trim() || '';
+      sichern();
+      baueAufgaben();
+      melde('Zurückgegeben — die Aufgabe kann neu bearbeitet werden.');
+    });
+
+    acts.append(ok, nein);
+    box.appendChild(el);
+  });
+}
+
+/* ---------------- Rollen ---------------- */
+
+function setzeRolle(rolle) {
+  zustand.rolle = rolle;
+  $('#tab-student').setAttribute('aria-pressed', rolle === 'schueler' ? 'true' : 'false');
+  $('#tab-teacher').setAttribute('aria-pressed', rolle === 'lehr' ? 'true' : 'false');
+  $('#new-task-btn').classList.toggle('hidden', rolle !== 'lehr');
+}
+
+function baueRollen() {
+  $('#tab-student').addEventListener('click', () => {
+    setzeRolle('schueler');
+    $('#profil').scrollIntoView({ behavior: sanft ? 'auto' : 'smooth' });
+  });
+  $('#tab-teacher').addEventListener('click', () => {
+    if (zustand.lehrkraft) setzeRolle('lehr');
+    $('#lehrkraft').scrollIntoView({ behavior: sanft ? 'auto' : 'smooth' });
+    if (!zustand.lehrkraft) setTimeout(() => $('#pin').focus(), sanft ? 0 : 500);
+  });
+  $('#new-task-btn').addEventListener('click', () =>
+    $('#lehrkraft').scrollIntoView({ behavior: sanft ? 'auto' : 'smooth' }));
+}
+
+/* ============================================================
+   06 · Wortfilter zum Ausprobieren
+   ============================================================ */
+
+const FILTER_BEISPIELE = ['Hallo aus Lissabon!', 'Du 1d10t', 'S i e g H e i l', 'fiiiiick', 'Marschkapelle'];
+
+function baueFilter() {
+  const feld = $('#filter-in');
+  $('#filter-samples').innerHTML = FILTER_BEISPIELE.map(b =>
+    `<button class="chip" data-bsp="${esc(b)}">${esc(b)}</button>`).join('');
+  $$('[data-bsp]').forEach(b => b.addEventListener('click', () => {
+    feld.value = b.dataset.bsp;
+    zeigeFilter();
+  }));
+  feld.addEventListener('input', zeigeFilter);
+  zeigeFilter();
+}
+
+function zeigeFilter() {
+  const text = $('#filter-in').value;
+  const urteil = $('#filter-verdict');
+  const spur = $('#filter-trace');
+  if (!text.trim()) {
+    urteil.className = 'verdict idle';
+    urteil.innerHTML = '<span>·</span><span>Noch nichts eingegeben</span>';
+    spur.innerHTML = '<p class="tiny soft">Tipp links etwas ein.</p>';
+    return;
+  }
+  const norm = normalisiere(text);
+  const eng = norm.replace(/[^a-z]/g, '');
+  const kurz = eng.replace(/(.)\1+/g, '$1');
+  const sauber = istSauber(text);
+  urteil.className = 'verdict ' + (sauber ? 'ok' : 'no');
+  urteil.innerHTML = sauber
+    ? '<span>✓</span><span>Geht durch</span>'
+    : '<span>✕</span><span>Wird geblockt</span>';
+  spur.innerHTML = [
+    ['Eingabe', text],
+    ['Kleingeschrieben, Umlaute aufgelöst, Zahlen zurückgesetzt', norm],
+    ['Ohne Leer- und Sonderzeichen', eng],
+    ['Doppelbuchstaben zusammengezogen', kurz]
+  ].map(([k, v]) => `<div class="trace-row"><span>${esc(k)}</span><code>${esc(v) || '—'}</code></div>`).join('');
+}
+
+/* ============================================================
+   Titelseite
+   ============================================================ */
+
+function baueTitel() {
+  const box = $('#hero-figures');
+  const leute = alleLeute();
+  const auswahl = [];
+  const rnd = mulberry(Date.now() & 0xffff);
+  while (auswahl.length < 6 && auswahl.length < leute.length) {
+    const k = leute[Math.floor(rnd() * leute.length)];
+    if (!auswahl.includes(k)) auswahl.push(k);
+  }
+  box.innerHTML = '';
+  auswahl.forEach((p, i) => {
+    const f = document.createElement('figure');
+    f.innerHTML = `<svg viewBox="0 0 100 100" style="color:var(--ink)"></svg>
+                   <figcaption>${esc(p.art === 'lehr' ? p.name.split(' ').pop() : p.name)}</figcaption>`;
+    f.title = `${p.name} · ${p.ort}`;
+    box.appendChild(f);
+    const svg = f.querySelector('svg');
+    portraet(svg, 8000 + leute.indexOf(p) * 137 + p.name.length * 13, STIFTE[i % STIFTE.length].hex);
+    blickfolge(svg);
+    f.addEventListener('click', () => {
+      oeffneGespraech(p.schluessel);
+      $('#leute').scrollIntoView({ behavior: sanft ? 'auto' : 'smooth' });
+    });
+    f.style.cursor = 'pointer';
+  });
+
+  $$('[data-goto]').forEach(b => b.addEventListener('click', () =>
+    $(b.dataset.goto).scrollIntoView({ behavior: sanft ? 'auto' : 'smooth' })));
+}
+
+/* ============================================================
+   Start
+   ============================================================ */
+
+function beobachte() {
+  if (!('IntersectionObserver' in window)) return;
+  const io = new IntersectionObserver(eintraege => {
+    eintraege.forEach(e => {
+      if (!e.isIntersecting) return;
+      e.target.classList.add('seen', 'marked');
+      io.unobserve(e.target);
+    });
+  }, { threshold: 0.4 });
+  $$('.head, .lead').forEach(el => io.observe(el));
+}
+
+function start() {
+  laden();
+  setzeRolle('schueler');
+  $('#tally-pts').textContent = zustand.punkte;
+
+  baueTitel();
+  baueProfil();
+  baueKarte();
+  baueLeute();
+  baueGespraech();
+  baueAufgaben();
+  baueEinreichen();
+  baueLehrkraft();
+  baueFilter();
+  baueRollen();
+
+  wortmarke();
+  kringel();
+  neigung();
+  beobachte();
+  alleRahmen();
+
+  $('#reset-all').addEventListener('click', () => {
+    try { localStorage.removeItem(SPEICHER); } catch (e) {}
+    location.reload();
+  });
+
+  let entprellen;
+  addEventListener('resize', () => {
+    clearTimeout(entprellen);
+    entprellen = setTimeout(alleRahmen, 180);
+  });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(alleRahmen);
+}
+
+if (document.readyState === 'loading') addEventListener('DOMContentLoaded', start);
+else start();
+</script>
+</body>
+</html>

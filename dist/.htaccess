@@ -1,0 +1,47 @@
+# hey EU – Apache-Einstellungen für IONOS Webhosting
+# Diese Datei gehört neben die index.html ins Webverzeichnis.
+# Der führende Punkt gehört zum Namen; im File Manager muss ggf.
+# "versteckte Dateien anzeigen" eingeschaltet werden.
+
+# ---------- Auf HTTPS umleiten ----------
+# IONOS setzt HTTPS_HOST hinter dem Loadbalancer, deshalb wird
+# zusätzlich X-Forwarded-Proto ausgewertet.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{HTTPS} !=on
+  RewriteCond %{HTTP:X-Forwarded-Proto} !https
+  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+</IfModule>
+
+DirectoryIndex index.html
+
+# ---------- Zeichensatz ----------
+AddDefaultCharset UTF-8
+
+# ---------- Kopfzeilen ----------
+<IfModule mod_headers.c>
+  # Die Seite lädt nichts nach: kein CDN, keine Schriften, keine Netzabfragen.
+  # Stil und Skript stehen inline, hochgeladene Bilder werden zu data:-Adressen.
+  Header always set Content-Security-Policy "default-src 'none'; img-src 'self' data:; style-src 'unsafe-inline'; script-src 'unsafe-inline'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'"
+
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "geolocation=(), microphone=(), camera=(), interest-cohort=()"
+
+  # Die Seite ist eine einzelne Datei, die sich ändert, wenn du neu hochlädst.
+  # Deshalb kurz zwischenspeichern und immer rückfragen lassen – sonst sehen
+  # Leute nach einer Aktualisierung tagelang die alte Fassung.
+  <FilesMatch "\.html$">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+</IfModule>
+
+# ---------- Komprimierung ----------
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/css application/javascript image/svg+xml
+</IfModule>
+
+# ---------- Quelldateien nicht ausliefern ----------
+<FilesMatch "(^\.|\.(sh|md|json|yml)$)">
+  Require all denied
+</FilesMatch>

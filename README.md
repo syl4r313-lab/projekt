@@ -42,15 +42,28 @@ Kartenraster, Länderzuordnung, Fährverbindungen und der komplette Wortfilter
 stammen unverändert aus dem Spiel-Artefakt. Personen, Texte, Fragen und Aufgaben
 sind für ältere Jugendliche neu geschrieben.
 
+## Veröffentlichen
+
+Siehe `docs/veroeffentlichen.md`. Kurz: `./build.sh` ausführen, dann den Inhalt
+von `dist/` auf den Webspace laden — **nicht** die `index.html` aus dem
+Projektstamm, die ist für den Artifact-Dienst und hat absichtlich keinen Doctype.
+
 ## Aufbau
 
-`index.html` wird aus vier Teilen in `src/` zusammengesetzt:
+`./build.sh` erzeugt aus den vier Teilen in `src/` beide Fassungen:
 
 ```
-cat src/01-head.html src/02-body.html src/03-data.js src/04-app.js > index.html
+index.html        für den Artifact-Dienst (nur Inhalt, der Dienst setzt den Rahmen)
+dist/index.html   fürs eigene Hosting (vollständiges Dokument)
+dist/.htaccess    Apache-Einstellungen für den Webspace
 ```
 
 - `01-head.html` — Titel und Stil
 - `02-body.html` — Aufbau der Seite
 - `03-data.js` — Länder, Personen, Aufgaben, Kartenraster, Wortfilterlisten
 - `04-app.js` — gezeichnete Rahmen, Porträts, Karte, Gespräche, Aufgaben, Rollen
+
+## Weitere Unterlagen
+
+- `docs/veroeffentlichen.md` — auf die eigene Domain bringen (IONOS)
+- `docs/server-skizze.md` — Entwurf für eine Serverfassung mit mehreren Klassen
