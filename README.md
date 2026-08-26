@@ -67,3 +67,5 @@ dist/.htaccess    Apache-Einstellungen für den Webspace
 
 - `docs/veroeffentlichen.md` — auf die eigene Domain bringen (IONOS)
 - `docs/server-skizze.md` — Entwurf für eine Serverfassung mit mehreren Klassen
+- `docs/arbeitsblaetter.html` — zwei Arbeitsblätter für den Klassentest (Kl. 9), A4-druckfertig,
+  dazu eine Seite Durchführungshinweise; `arbeitsblaetter.pdf` ist die fertige Druckfassung

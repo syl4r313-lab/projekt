@@ -1,0 +1,761 @@
+<title>hey EU Testblätter</title>
+
+<style>
+/* ============================================================
+   hey EU · Arbeitsblätter für den Klassentest
+   Druck zuerst: A4, echte Linien zum Schreiben.
+   Schreiblinien und Kästchen sind Rahmen, keine Hintergrundbilder –
+   viele Browser drucken Hintergrundgrafiken standardmäßig nicht mit.
+   ============================================================ */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+:root {
+  --papier: #fbfaf7;
+  --tinte: #1c2530;
+  --tinte-leise: #5d6b7c;
+  --linie: #b9c2cd;
+  --regel: rgba(28, 37, 48, 0.18);
+  --stift: #2f4f8f;
+  --rot: #cf4a37;
+  --gruen: #2f7a4f;
+  --f-titel: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+  --f-text: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --f-feld: ui-monospace, SFMono-Regular, "Cascadia Mono", Consolas, monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --papier: #1e242b; --tinte: #eceae1; --tinte-leise: #a8b2bd;
+    --linie: #454f5a; --regel: rgba(236, 234, 225, 0.2);
+    --stift: #9fc2f2; --rot: #f08573; --gruen: #7fd0a2;
+  }
+}
+:root[data-theme="dark"] {
+  --papier: #1e242b; --tinte: #eceae1; --tinte-leise: #a8b2bd;
+  --linie: #454f5a; --regel: rgba(236, 234, 225, 0.2);
+  --stift: #9fc2f2; --rot: #f08573; --gruen: #7fd0a2;
+}
+:root[data-theme="light"] {
+  --papier: #fbfaf7; --tinte: #1c2530; --tinte-leise: #5d6b7c;
+  --linie: #b9c2cd; --regel: rgba(28, 37, 48, 0.18);
+  --stift: #2f4f8f; --rot: #cf4a37; --gruen: #2f7a4f;
+}
+
+body {
+  margin: 0;
+  padding: 1.5rem 1rem 4rem;
+  font-family: var(--f-text);
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--tinte);
+  background: var(--papier);
+}
+
+/* ---------- Ein Blatt ---------- */
+
+.blatt {
+  width: 190mm;
+  margin: 0 auto 2.5rem;
+  padding: 12mm 13mm 14mm;
+  background: var(--papier);
+  border: 1px solid var(--regel);
+  border-radius: 2px;
+}
+.blatt + .blatt { margin-top: 2.5rem; }
+
+h1, h2, h3 { margin: 0; font-family: var(--f-titel); font-weight: 600; line-height: 1.15; }
+h1 { font-size: 1.5rem; }
+h2 { font-size: 1.12rem; margin-top: 1.5rem; }
+h3 { font-size: 1rem; font-family: var(--f-text); font-weight: 700; }
+p { margin: 0; }
+
+.kopf { display: flex; align-items: baseline; gap: 0.7rem; border-bottom: 2px solid var(--tinte); padding-bottom: 0.5rem; }
+.kopf .nr { font-family: var(--f-feld); font-size: 0.72rem; letter-spacing: 0.14em; color: var(--rot); white-space: nowrap; }
+.kopf .fach { margin-left: auto; font-family: var(--f-feld); font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--tinte-leise); }
+.untertitel { margin-top: 0.4rem; color: var(--tinte-leise); font-size: 0.94rem; }
+
+/* Namensfelder oben */
+.felder { display: flex; flex-wrap: wrap; gap: 0.4rem 1.2rem; margin-top: 0.8rem; font-size: 0.85rem; }
+.felder span { display: inline-flex; align-items: baseline; gap: 0.4rem; }
+.felder i { font-style: normal; font-family: var(--f-feld); font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--tinte-leise); }
+.felder u { text-decoration: none; border-bottom: 1px solid var(--linie); display: inline-block; }
+.w-lang u { width: 46mm; } .w-mittel u { width: 30mm; } .w-kurz u { width: 20mm; }
+
+/* ---------- Aufgabenblock ---------- */
+
+.teil { margin-top: 1.4rem; }
+.teil-kopf { display: flex; align-items: baseline; gap: 0.6rem; break-after: avoid; }
+.teil-nr {
+  font-family: var(--f-feld); font-size: 0.7rem; letter-spacing: 0.1em;
+  color: var(--papier); background: var(--tinte);
+  padding: 0.12rem 0.45rem; border-radius: 2px; white-space: nowrap;
+}
+.dauer { margin-left: auto; font-family: var(--f-feld); font-size: 0.64rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--tinte-leise); }
+.anleitung { margin-top: 0.35rem; font-size: 0.92rem; color: var(--tinte-leise); break-after: avoid; }
+
+/* ---------- Erklärkasten ---------- */
+
+.erklaer {
+  margin: 0.8rem 0;
+  padding: 0.6rem 0.85rem;
+  border-left: 3px solid var(--stift);
+  font-size: 0.88rem;
+  line-height: 1.5;
+  break-inside: avoid;
+}
+.erklaer b { display: block; font-family: var(--f-feld); font-size: 0.62rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--stift); margin-bottom: 0.25rem; }
+
+/* ---------- Schreiblinien: echte Rahmen, damit sie mitdrucken ---------- */
+
+.schreib { margin-top: 0.5rem; }
+.schreib > div { border-bottom: 1px solid var(--linie); height: 8.5mm; }
+.schreib.eng > div { height: 7mm; }
+
+.frage { margin-top: 0.9rem; break-inside: avoid; }
+.frage > p { font-size: 0.95rem; }
+.frage .mini { font-size: 0.82rem; color: var(--tinte-leise); margin-top: 0.15rem; }
+
+/* ---------- Ankreuzen ---------- */
+
+.kasten {
+  display: inline-block;
+  width: 4.2mm; height: 4.2mm;
+  border: 1.3px solid var(--tinte);
+  border-radius: 1px;
+  vertical-align: -0.5mm;
+  margin-right: 0.25rem;
+  flex: none;
+}
+.wahl { display: inline-flex; align-items: center; gap: 0.15rem; margin-right: 1rem; font-size: 0.88rem; white-space: nowrap; }
+
+/* Auftragsliste */
+.auftraege { list-style: none; padding: 0; margin: 0.6rem 0 0; }
+.auftraege li { display: flex; gap: 0.5rem; padding: 0.45rem 0; border-bottom: 1px dotted var(--regel); break-inside: avoid; }
+.auftraege .txt { flex: 1; font-size: 0.92rem; }
+.auftraege .txt small { display: block; color: var(--tinte-leise); font-size: 0.78rem; white-space: nowrap; overflow: hidden; }
+.auftraege .status { display: flex; gap: 0.35rem; flex: none; padding-top: 0.1rem; }
+.auftraege .status span { display: inline-flex; align-items: center; gap: 0.12rem; font-size: 0.7rem; color: var(--tinte-leise); }
+
+/* ---------- Fehlerbericht ---------- */
+
+.bericht { border: 1.3px solid var(--tinte); border-radius: 2px; padding: 0.6rem 0.75rem; margin-top: 0.7rem; break-inside: avoid; }
+.bericht .zeile { display: flex; gap: 0.5rem; align-items: baseline; padding: 0.28rem 0; }
+.bericht .zeile + .zeile { border-top: 1px dotted var(--regel); }
+.bericht .lab { font-family: var(--f-feld); font-size: 0.62rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--tinte-leise); width: 34mm; flex: none; }
+.bericht .platz { flex: 1; border-bottom: 1px solid var(--linie); height: 7mm; }
+.bericht .platz.hoch { height: 13mm; }
+
+/* Beispiel gut/schlecht */
+.gegen { display: grid; grid-template-columns: 1fr 1fr; gap: 0.7rem; margin-top: 0.6rem; }
+.gegen > div { border: 1px solid var(--regel); border-radius: 2px; padding: 0.5rem 0.65rem; font-size: 0.83rem; line-height: 1.45; }
+.gegen .lab { font-family: var(--f-feld); font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.25rem; }
+.gegen .schlecht .lab { color: var(--rot); }
+.gegen .gut .lab { color: var(--gruen); }
+
+/* ---------- Notenskala ---------- */
+
+.skala { width: 100%; border-collapse: collapse; margin-top: 0.6rem; font-size: 0.88rem; }
+.skala th { font-family: var(--f-feld); font-size: 0.6rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--tinte-leise); font-weight: 400; padding: 0 0 0.3rem; }
+.skala th.z { width: 9mm; text-align: center; }
+.skala td { padding: 0.32rem 0; border-top: 1px dotted var(--regel); }
+.skala td.z { text-align: center; }
+.skala .note { display: inline-block; width: 4.2mm; height: 4.2mm; border: 1.3px solid var(--tinte); border-radius: 50%; }
+.skala caption { caption-side: bottom; text-align: left; font-size: 0.78rem; color: var(--tinte-leise); padding-top: 0.4rem; }
+
+/* ---------- Experiment-Tabelle ---------- */
+
+.versuche { width: 100%; border-collapse: collapse; margin-top: 0.6rem; font-size: 0.88rem; }
+.versuche th { text-align: left; font-family: var(--f-feld); font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--tinte-leise); font-weight: 400; padding-bottom: 0.3rem; border-bottom: 1px solid var(--tinte); }
+.versuche td { padding: 0.45rem 0.5rem 0.45rem 0; border-bottom: 1px dotted var(--regel); vertical-align: top; }
+.versuche td:first-child { padding-left: 0; }
+.versuche .schmal { width: 26mm; }
+.versuche .platz { border-bottom: 1px solid var(--linie); height: 6.5mm; }
+
+kbd {
+  font-family: var(--f-feld); font-size: 0.82em;
+  border: 1px solid var(--regel); border-bottom-width: 2px;
+  border-radius: 3px; padding: 0.05em 0.35em; white-space: nowrap;
+}
+code { font-family: var(--f-feld); font-size: 0.88em; }
+
+.fuss { margin-top: 1.6rem; padding-top: 0.5rem; border-top: 1px solid var(--regel); font-family: var(--f-feld); font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--tinte-leise); display: flex; }
+.fuss span:last-child { margin-left: auto; }
+
+/* ---------- Nur am Bildschirm ---------- */
+
+.schirm { max-width: 190mm; margin: 0 auto 1.5rem; display: flex; flex-wrap: wrap; gap: 0.7rem; align-items: center; }
+.schirm p { font-size: 0.88rem; color: var(--tinte-leise); flex: 1; min-width: 220px; }
+.knopf {
+  font-family: var(--f-text); font-size: 0.9rem; font-weight: 600;
+  color: var(--papier); background: var(--tinte);
+  border: none; border-radius: 2px; padding: 0.5rem 1rem; cursor: pointer;
+  box-shadow: 2px 2px 0 var(--regel);
+}
+.knopf:hover { transform: translate(-1px, -1px); box-shadow: 3px 3px 0 var(--regel); }
+.knopf:focus-visible { outline: 2px dashed var(--stift); outline-offset: 3px; }
+
+/* ============================================================
+   Druck
+   ============================================================ */
+
+@page { size: A4 portrait; margin: 11mm 13mm 9mm; }
+
+@media print {
+  :root { --papier: #fff; --tinte: #000; --tinte-leise: #444; --linie: #999; --regel: #bbb;
+          --stift: #000; --rot: #000; --gruen: #000; color-scheme: light; }
+  body { padding: 0; font-size: 9.1pt; line-height: 1.4; background: #fff; }
+  .schirm { display: none; }
+  .blatt { width: auto; margin: 0; padding: 0; border: none; }
+  .blatt + .blatt { margin-top: 0; break-before: page; }
+  .teil-nr { color: #fff; background: #000; }
+  a { text-decoration: none; color: #000; }
+
+  /* Enger setzen, damit jedes Blatt auf eine Seite geht.
+     Die Schreiblinien bleiben mit 6,5 mm bequem beschreibbar. */
+  h1 { font-size: 1.32rem; }
+  h2 { font-size: 1.05rem; margin-top: 0.7rem; }
+  .untertitel { margin-top: 0.3rem; font-size: 0.9rem; }
+  .felder { margin-top: 0.55rem; }
+  .teil { margin-top: 0.7rem; }
+  .anleitung { margin-top: 0.25rem; }
+  .frage { margin-top: 0.5rem; }
+  .schreib { margin-top: 0.3rem; }
+  .schreib > div { height: 6.2mm; }
+  .schreib.eng > div { height: 5.8mm; }
+  .erklaer { margin: 0.5rem 0; padding: 0.4rem 0.7rem; font-size: 0.85rem; line-height: 1.42; }
+  .auftraege { margin-top: 0.4rem; }
+  .auftraege li { padding: 0.26rem 0; }
+  .bericht { padding: 0.4rem 0.6rem; margin-top: 0.4rem; }
+  .bericht .zeile { padding: 0.18rem 0; }
+  .bericht .platz { height: 5.6mm; }
+  .bericht .platz.hoch { height: 9mm; }
+  .gegen { margin-top: 0.45rem; gap: 0.5rem; }
+  .gegen > div { padding: 0.4rem 0.55rem; font-size: 0.8rem; }
+  .versuche { margin-top: 0.4rem; }
+  .versuche td { padding: 0.28rem 0.5rem 0.28rem 0; }
+  .versuche .platz { height: 5.3mm; }
+  .skala { margin-top: 0.45rem; }
+  .skala td { padding: 0.24rem 0; }
+  .fuss { margin-top: 0.7rem; padding-top: 0.35rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; }
+}
+</style>
+
+<div class="schirm">
+  <p>Zwei Arbeitsblätter für den Klassentest, ausgelegt für A4.
+     Blatt 3 sind die Hinweise für die Lehrkraft und muss nicht mit ausgeteilt werden.</p>
+  <button class="knopf" id="drucken">Drucken oder als PDF sichern</button>
+</div>
+
+<!-- ============================================================
+     BLATT 1
+     ============================================================ -->
+<section class="blatt">
+  <div class="kopf">
+    <span class="nr">AB 1</span>
+    <h1>Erster Eindruck und Fehlersuche</h1>
+    <span class="fach">hey EU · Klassentest</span>
+  </div>
+  <p class="untertitel">Ihr testet eine unfertige Webseite. Eure Aufgabe ist, herauszufinden, was daran hakt.</p>
+
+  <div class="felder">
+    <span class="w-lang"><i>Name</i><u></u></span>
+    <span class="w-kurz"><i>Klasse</i><u></u></span>
+    <span class="w-kurz"><i>Datum</i><u></u></span>
+    <span class="w-mittel"><i>Gerät</i><u></u></span>
+    <span class="w-mittel"><i>Browser</i><u></u></span>
+    <span style="flex:1 0 100%"><i>Adresse</i><u style="width:80mm"></u></span>
+  </div>
+
+  <!-- Teil 1 -->
+  <div class="teil">
+    <div class="teil-kopf">
+      <span class="teil-nr">TEIL 1</span>
+      <h2 style="margin:0">Drei Minuten ohne Hilfe</h2>
+      <span class="dauer">3 min · allein</span>
+    </div>
+    <p class="anleitung">Öffne die Seite und klick dich um. <b>Lies keine Anleitung, frag niemanden,
+      schau nicht zum Nachbarn.</b> Nach drei Minuten aufhören und sofort ausfüllen.</p>
+
+    <div class="erklaer">
+      <b>Warum zuerst ohne Erklärung</b>
+      Wer eine Seite gebaut hat, findet alles selbstverständlich — er weiß ja, wo es steht. Der Blick
+      von jemandem, der sie nie gesehen hat, ist weg, sobald ihn jemand erklärt bekommen hat.
+    </div>
+
+    <div class="frage">
+      <p><b>a)</b> Worum geht es auf dieser Seite? Ein Satz, in deinen eigenen Worten.</p>
+      <div class="schreib"><div></div></div>
+    </div>
+    <div class="frage">
+      <p><b>b)</b> Was hast du als Erstes angeklickt? Und warum gerade das?</p>
+      <div class="schreib"><div></div></div>
+    </div>
+    <div class="frage">
+      <p><b>c)</b> Was hast du gesucht und nicht gefunden?</p>
+      <div class="schreib"><div></div><div></div></div>
+    </div>
+    <div class="frage">
+      <p><b>d)</b> Wo warst du unsicher, was passiert, wenn du klickst?</p>
+      <div class="schreib"><div></div></div>
+    </div>
+  </div>
+
+  <!-- Teil 2 -->
+  <div class="teil">
+    <div class="teil-kopf">
+      <span class="teil-nr">TEIL 2</span>
+      <h2 style="margin:0">Sieben Aufträge</h2>
+      <span class="dauer">15 min</span>
+    </div>
+    <p class="anleitung">Abarbeiten, ankreuzen, und bei allem, was hakte, kurz notieren woran.</p>
+
+    <ul class="auftraege">
+      <li>
+        <span class="txt"><b>1.</b> Leg ein Profil an. Probier dabei aus, was passiert, wenn du
+          <code>Admin</code> als Namen eingibst.
+          <small>Beobachtung: __________________________</small></span>
+        <span class="status"><span><span class="kasten"></span>ok</span><span><span class="kasten"></span>halb</span><span><span class="kasten"></span>nein</span></span>
+      </li>
+      <li>
+        <span class="txt"><b>2.</b> Fahr auf der Karte über drei Länder, <i>ohne</i> zu klicken.
+          Was verändert sich dabei?
+          <small>Beobachtung: __________________________</small></span>
+        <span class="status"><span><span class="kasten"></span>ok</span><span><span class="kasten"></span>halb</span><span><span class="kasten"></span>nein</span></span>
+      </li>
+      <li>
+        <span class="txt"><b>3.</b> Klick ein Land an und beantworte die Frage im Steckbrief.
+          <small>Wie viele Punkte gab es? ________ Und beim zweiten Versuch? ________</small></span>
+        <span class="status"><span><span class="kasten"></span>ok</span><span><span class="kasten"></span>halb</span><span><span class="kasten"></span>nein</span></span>
+      </li>
+      <li>
+        <span class="txt"><b>4.</b> Lauf mit den Pfeiltasten zu einem Wahrzeichen, bis es zählt.
+          <small>Wie lange hat das gedauert? ________ Wie hast du gemerkt, dass es geklappt hat? ________________</small></span>
+        <span class="status"><span><span class="kasten"></span>ok</span><span><span class="kasten"></span>halb</span><span><span class="kasten"></span>nein</span></span>
+      </li>
+      <li>
+        <span class="txt"><b>5.</b> Schreib jemandem aus einem anderen Land. Benutze auch das freie
+          Textfeld, nicht nur die vorgeschlagenen Fragen.
+          <small>Kam eine passende Antwort? __________________________</small></span>
+        <span class="status"><span><span class="kasten"></span>ok</span><span><span class="kasten"></span>halb</span><span><span class="kasten"></span>nein</span></span>
+      </li>
+      <li>
+        <span class="txt"><b>6.</b> Reiche einen Beitrag zu einer Aufgabe ein.
+          <small>Was steht danach an der Aufgabe? __________________________</small></span>
+        <span class="status"><span><span class="kasten"></span>ok</span><span><span class="kasten"></span>halb</span><span><span class="kasten"></span>nein</span></span>
+      </li>
+      <li>
+        <span class="txt"><b>7.</b> Öffne den Lehrkräfte-Bereich mit der PIN <code>2468</code> und gib
+          deinen eigenen Beitrag frei.
+          <small>Was passiert mit deinen Punkten? __________________________</small></span>
+        <span class="status"><span><span class="kasten"></span>ok</span><span><span class="kasten"></span>halb</span><span><span class="kasten"></span>nein</span></span>
+      </li>
+    </ul>
+  </div>
+
+  <div class="fuss"><span>hey EU · Arbeitsblatt 1</span><span>Seite 1 von 2</span></div>
+</section>
+
+<!-- BLATT 1, Seite 2 -->
+<section class="blatt">
+  <div class="kopf">
+    <span class="nr">AB 1</span>
+    <h1>Fehler brauchbar aufschreiben</h1>
+    <span class="fach">Fortsetzung</span>
+  </div>
+
+  <!-- Teil 3 -->
+  <div class="teil" style="margin-top:1rem">
+    <div class="teil-kopf">
+      <span class="teil-nr">TEIL 3</span>
+      <h2 style="margin:0">Fehlerberichte</h2>
+      <span class="dauer">10 min</span>
+    </div>
+
+    <div class="erklaer">
+      <b>Was einen Fehlerbericht brauchbar macht</b>
+      „Geht nicht“ hilft niemandem. Ein Bericht taugt erst etwas, wenn jemand anders den Fehler damit
+      <i>nachstellen</i> kann: was du gemacht hast, was passierte, was du erwartet hättest. Der dritte
+      Punkt wird am häufigsten vergessen und ist oft der wichtigste — manchmal läuft alles wie gebaut,
+      nur anders als erwartet.
+    </div>
+
+    <div class="gegen">
+      <div class="schlecht">
+        <p class="lab">Unbrauchbar</p>
+        „Die Karte spinnt manchmal.“
+      </div>
+      <div class="gut">
+        <p class="lab">Brauchbar</p>
+        „Auf Island geklickt, dann sofort auf Griechenland. Die Figur blieb auf halbem Weg stehen,
+        der Steckbrief zeigte noch Island. Erwartet: dass sie zu Ende läuft.“
+      </div>
+    </div>
+
+    <p class="anleitung" style="margin-top:0.7rem">Auch Kleinigkeiten eintragen. Ist dir kein Fehler
+      begegnet, beschreibe eine Stelle, an der du zögern musstest.</p>
+
+    <div class="bericht">
+      <div class="zeile"><span class="lab">Nr. 1 · Was gemacht</span><span class="platz hoch"></span></div>
+      <div class="zeile"><span class="lab">Was passiert ist</span><span class="platz"></span></div>
+      <div class="zeile"><span class="lab">Was erwartet</span><span class="platz"></span></div>
+      <div class="zeile"><span class="lab">Wie oft</span>
+        <span class="wahl"><span class="kasten"></span>immer</span>
+        <span class="wahl"><span class="kasten"></span>manchmal</span>
+        <span class="wahl"><span class="kasten"></span>einmal</span>
+      </div>
+    </div>
+
+    <div class="bericht">
+      <div class="zeile"><span class="lab">Nr. 2 · Was gemacht</span><span class="platz hoch"></span></div>
+      <div class="zeile"><span class="lab">Was passiert ist</span><span class="platz"></span></div>
+      <div class="zeile"><span class="lab">Was erwartet</span><span class="platz"></span></div>
+      <div class="zeile"><span class="lab">Wie oft</span>
+        <span class="wahl"><span class="kasten"></span>immer</span>
+        <span class="wahl"><span class="kasten"></span>manchmal</span>
+        <span class="wahl"><span class="kasten"></span>einmal</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Teil 4 -->
+  <div class="teil">
+    <div class="teil-kopf">
+      <span class="teil-nr">TEIL 4</span>
+      <h2 style="margin:0">Kaputtmachen ausdrücklich erlaubt</h2>
+      <span class="dauer">10 min</span>
+    </div>
+
+    <div class="erklaer">
+      <b>Warum das keine Spielerei ist</b>
+      Wer eine Seite baut, testet den Weg, den er sich gedacht hat. Die Fehler sitzen selten auf
+      diesem Weg — sie sitzen daneben. Absichtliches Überfordern ist deshalb eine Testmethode.
+    </div>
+
+    <table class="versuche">
+      <tr><th style="width:6mm"></th><th>Versuch</th><th>Was passiert ist</th></tr>
+      <tr><td><span class="kasten"></span></td>
+        <td>Sehr langer Name im Profil (einfach lange draufhalten)</td><td class="platz"></td></tr>
+      <tr><td><span class="kasten"></span></td>
+        <td>Nur Leerzeichen als Name, oder ein Emoji als Name</td><td class="platz"></td></tr>
+      <tr><td><span class="kasten"></span></td>
+        <td><code>&lt;b&gt;hallo&lt;/b&gt;</code> als Name eingeben</td><td class="platz"></td></tr>
+      <tr><td><span class="kasten"></span></td>
+        <td>Beitrag ganz ohne Text und ohne Bild abschicken</td><td class="platz"></td></tr>
+      <tr><td><span class="kasten"></span></td>
+        <td>Fenster ganz schmal ziehen — oder Handy quer und hoch drehen</td><td class="platz"></td></tr>
+      <tr><td><span class="kasten"></span></td>
+        <td>Seite mitten drin neu laden (<kbd>F5</kbd>). Ist alles noch da?</td><td class="platz"></td></tr>
+      <tr><td><span class="kasten"></span></td>
+        <td>Die Seite nur mit <kbd>Tab</kbd> und <kbd>Enter</kbd> bedienen, ohne Maus</td><td class="platz"></td></tr>
+      <tr><td><span class="kasten"></span></td>
+        <td>Eigener Einfall: <u style="border-bottom:1px solid var(--linie);display:inline-block;width:38mm"></u></td><td class="platz"></td></tr>
+    </table>
+  </div>
+
+  <div class="fuss"><span>hey EU · Arbeitsblatt 1</span><span>Seite 2 von 2</span></div>
+</section>
+
+<!-- ============================================================
+     BLATT 2
+     ============================================================ -->
+<section class="blatt">
+  <div class="kopf">
+    <span class="nr">AB 2</span>
+    <h1>Wie funktioniert das eigentlich?</h1>
+    <span class="fach">hey EU · Klassentest</span>
+  </div>
+  <p class="untertitel">Drei Versuche und die Frage, was daraus folgt. Alles, was du dafür brauchst,
+    steckt in der Seite selbst.</p>
+
+  <div class="felder">
+    <span class="w-lang"><i>Name</i><u></u></span>
+    <span class="w-kurz"><i>Klasse</i><u></u></span>
+    <span class="w-kurz"><i>Datum</i><u></u></span>
+  </div>
+
+  <!-- Teil 1 -->
+  <div class="teil">
+    <div class="teil-kopf">
+      <span class="teil-nr">TEIL 1</span>
+      <h2 style="margin:0">Wo liegen deine Daten?</h2>
+      <span class="dauer">10 min · zu zweit</span>
+    </div>
+
+    <table class="versuche">
+      <tr><th style="width:6mm"></th><th>Versuch</th><th class="schmal">Ergebnis</th></tr>
+      <tr><td><span class="kasten"></span></td>
+        <td>Profil anlegen, dann die Seite neu laden (<kbd>F5</kbd>). Ist dein Name noch da?</td>
+        <td><span class="wahl"><span class="kasten"></span>ja</span><span class="wahl"><span class="kasten"></span>nein</span></td></tr>
+      <tr><td><span class="kasten"></span></td>
+        <td>Privates Fenster öffnen (<kbd>Strg</kbd>+<kbd>Umschalt</kbd>+<kbd>N</kbd>, am Mac
+          <kbd>Cmd</kbd>+<kbd>Umschalt</kbd>+<kbd>N</kbd>) und die Seite dort aufrufen. Ist dein Profil da?</td>
+        <td><span class="wahl"><span class="kasten"></span>ja</span><span class="wahl"><span class="kasten"></span>nein</span></td></tr>
+      <tr><td><span class="kasten"></span></td>
+        <td>Deine Sitznachbarin legt auf ihrem Gerät ein Profil an. Siehst du sie im Verzeichnis?</td>
+        <td><span class="wahl"><span class="kasten"></span>ja</span><span class="wahl"><span class="kasten"></span>nein</span></td></tr>
+    </table>
+
+    <div class="erklaer">
+      <b>Was da passiert</b>
+      Jeder Browser hat für jede Webseite einen kleinen eigenen Speicher, den <i>local storage</i>.
+      Die Seite legt dein Profil dort ab. Dieser Speicher gehört zu <i>diesem</i> Gerät und
+      <i>diesem</i> Browser — ein privates Fenster bekommt einen leeren. An einen Server im Netz
+      wird nichts geschickt; es gibt gar keinen.
+    </div>
+
+    <div class="frage">
+      <p><b>a)</b> Nenne einen Vorteil davon, dass nichts das Gerät verlässt.</p>
+      <div class="schreib"><div></div></div>
+    </div>
+    <div class="frage">
+      <p><b>b)</b> Die Seite nennt sich „Austauschplattform“. Warum kann sie das so, wie sie jetzt
+        gebaut ist, gar nicht leisten?</p>
+      <div class="schreib"><div></div><div></div></div>
+    </div>
+    <div class="frage">
+      <p><b>c)</b> Was müsste dazukommen, damit zwei Schulen wirklich miteinander arbeiten können?
+        Beschreib es in eigenen Worten, Fachbegriffe brauchst du nicht.</p>
+      <div class="schreib"><div></div><div></div></div>
+    </div>
+  </div>
+
+  <!-- Teil 2 -->
+  <div class="teil">
+    <div class="teil-kopf">
+      <span class="teil-nr">TEIL 2</span>
+      <h2 style="margin:0">Der Wortfilter</h2>
+      <span class="dauer">15 min</span>
+    </div>
+    <p class="anleitung">Geh zu Abschnitt <b>06 · Was der Filter macht</b>. Dort kannst du Texte
+      eingeben und siehst rechts, wie sie zerlegt werden.</p>
+
+    <div class="frage">
+      <p><b>a)</b> Gib <code>Marschkapelle</code> ein. Das Wort geht durch, obwohl „arsch“ darin
+        steckt. Schau in die Zerlegung und erkläre, wie der Filter das unterscheidet.</p>
+      <div class="schreib"><div></div><div></div></div>
+    </div>
+
+    <div class="frage">
+      <p><b>b)</b> Gib <code>Du 1d10t</code> ein. Verfolge die vier Zeilen der Zerlegung und
+        schreib auf, was in jedem Schritt mit dem Text gemacht wird.</p>
+      <table class="versuche" style="margin-top:0.4rem">
+        <tr><td class="schmal">Schritt 1</td><td class="platz"></td></tr>
+        <tr><td class="schmal">Schritt 2</td><td class="platz"></td></tr>
+        <tr><td class="schmal">Schritt 3</td><td class="platz"></td></tr>
+        <tr><td class="schmal">Schritt 4</td><td class="platz"></td></tr>
+      </table>
+    </div>
+
+  </div>
+
+  <div class="fuss"><span>hey EU · Arbeitsblatt 2</span><span>Seite 1 von 3</span></div>
+</section>
+
+<!-- BLATT 2 von AB 2 -->
+<section class="blatt">
+  <div class="kopf">
+    <span class="nr">AB 2</span>
+    <h1>Filterlücken und die PIN</h1>
+    <span class="fach">Fortsetzung</span>
+  </div>
+
+  <div class="teil" style="margin-top:1rem">
+    <div class="teil-kopf">
+      <span class="teil-nr">TEIL 2</span>
+      <h2 style="margin:0">Der Wortfilter — Fortsetzung</h2>
+    </div>
+    <div class="frage">
+      <p><b>c)</b> Finde einen völlig harmlosen Ausdruck, den der Filter trotzdem sperrt.</p>
+      <div class="schreib eng"><div></div></div>
+    </div>
+    <div class="frage">
+      <p><b>d)</b> Finde eine Beleidigung, die durchkommt. Hier darfst du sie aufschreiben — es
+        geht darum, eine Lücke zu belegen.</p>
+      <div class="schreib eng"><div></div></div>
+    </div>
+
+    <div class="erklaer">
+      <b>Zwei Arten, danebenzuliegen</b>
+      Für c) sagt man <i>falsch positiv</i>: harmlos, aber gesperrt. Für d) <i>falsch negativ</i>:
+      gemein, aber durchgelassen. Jeder Filter hat beides, und die beiden hängen zusammen — wer die
+      Listen strenger macht, sperrt mehr Harmloses; wer sie lockert, lässt mehr durch. Einen Punkt,
+      an dem beides null ist, gibt es nicht.
+    </div>
+
+    <div class="frage">
+      <p><b>e)</b> Kann ein Wortfilter Mobbing in so einer Klasse verhindern? Begründe deine Antwort
+        mit einem Beispiel.</p>
+      <div class="schreib"><div></div><div></div><div></div></div>
+    </div>
+  </div>
+
+  <!-- Teil 3 -->
+  <div class="teil">
+    <div class="teil-kopf">
+      <span class="teil-nr">TEIL 3</span>
+      <h2 style="margin:0">Die PIN</h2>
+      <span class="dauer">10 min</span>
+    </div>
+    <p class="anleitung">Der Lehrkräfte-Bereich ist mit der PIN <code>2468</code> geschützt.
+      Prüfen wir, was dieser Schutz wert ist.</p>
+
+    <div class="frage">
+      <p><b>a)</b> Drück <kbd>Strg</kbd>+<kbd>U</kbd> (am Mac <kbd>Cmd</kbd>+<kbd>Alt</kbd>+<kbd>U</kbd>).
+        Es öffnet sich der Quelltext der Seite. Such darin mit <kbd>Strg</kbd>+<kbd>F</kbd> nach
+        <code>2468</code>. Was findest du?</p>
+      <div class="schreib"><div></div><div></div></div>
+    </div>
+
+    <div class="erklaer">
+      <b>Warum das unvermeidbar ist</b>
+      Alles, was dein Browser ausführt, muss er vorher bekommen haben — sonst könnte er es nicht
+      ausführen. Eine Seite ohne Server schickt ihre eigenen Regeln also immer mit. Sie kann kein
+      Geheimnis für sich behalten. Die PIN hält deshalb nur jemanden ab, der nicht nachschaut.
+    </div>
+
+    <div class="frage">
+      <p><b>b)</b> Wo müsste die Prüfung der PIN stattfinden, damit sie tatsächlich schützt?</p>
+      <div class="schreib"><div></div></div>
+    </div>
+    <div class="frage">
+      <p><b>c)</b> Auf der Seite sammelt man Punkte. Stell dir vor, es gäbe einen Server dazu.
+        Warum sollte der die Punkte selbst nachrechnen, statt zu glauben, was der Browser meldet?</p>
+      <div class="schreib"><div></div><div></div></div>
+    </div>
+  </div>
+
+  <div class="fuss"><span>hey EU · Arbeitsblatt 2</span><span>Seite 2 von 3</span></div>
+</section>
+
+<!-- BLATT 3 von AB 2 -->
+<section class="blatt">
+  <div class="kopf">
+    <span class="nr">AB 2</span>
+    <h1>Deine Rückmeldung</h1>
+    <span class="fach">Fortsetzung</span>
+  </div>
+  <p class="untertitel">Sei ehrlich. Lob hilft hier niemandem weiter — Kritik schon.</p>
+
+  <div class="teil">
+    <div class="teil-kopf">
+      <span class="teil-nr">TEIL 4</span>
+      <h2 style="margin:0">Bewertung und Vorschläge</h2>
+      <span class="dauer">10 min</span>
+    </div>
+    <table class="skala">
+      <tr><th></th><th class="z">1</th><th class="z">2</th><th class="z">3</th><th class="z">4</th><th class="z">5</th><th class="z">6</th></tr>
+      <tr><td>Ich wusste jederzeit, was ich hier tun kann</td>
+        <td class="z"><span class="note"></span></td><td class="z"><span class="note"></span></td><td class="z"><span class="note"></span></td><td class="z"><span class="note"></span></td><td class="z"><span class="note"></span></td><td class="z"><span class="note"></span></td></tr>
+      <tr><td>Das Aussehen</td>
+        <td class="z"><span class="note"></span></td><td class="z"><span class="note"></span></td><td class="z"><span class="note"></span></td><td class="z"><span class="note"></span></td><td class="z"><span class="note"></span></td><td class="z"><span class="note"></span></td></tr>
+      <tr><td>Die Bedienung mit Maus oder Finger</td>
+        <td class="z"><span class="note"></span></td><td class="z"><span class="note"></span></td><td class="z"><span class="note"></span></td><td class="z"><span class="note"></span></td><td class="z"><span class="note"></span></td><td class="z"><span class="note"></span></td></tr>
+      <tr><td>Auf dem Handy benutzbar</td>
+        <td class="z"><span class="note"></span></td><td class="z"><span class="note"></span></td><td class="z"><span class="note"></span></td><td class="z"><span class="note"></span></td><td class="z"><span class="note"></span></td><td class="z"><span class="note"></span></td></tr>
+      <tr><td>Das würde ich im Unterricht benutzen wollen</td>
+        <td class="z"><span class="note"></span></td><td class="z"><span class="note"></span></td><td class="z"><span class="note"></span></td><td class="z"><span class="note"></span></td><td class="z"><span class="note"></span></td><td class="z"><span class="note"></span></td></tr>
+      <caption>1 = sehr gut, 6 = ungenügend — wie bei Noten.</caption>
+    </table>
+
+    <div class="frage">
+      <p><b>a)</b> Was würdest du als Allererstes ändern?</p>
+      <div class="schreib eng"><div></div><div></div><div></div></div>
+    </div>
+    <div class="frage">
+      <p><b>b)</b> Was hat gefehlt?</p>
+      <div class="schreib eng"><div></div><div></div></div>
+    </div>
+    <div class="frage">
+      <p><b>c)</b> Was war überflüssig und könnte weg?</p>
+      <div class="schreib eng"><div></div></div>
+    </div>
+    <div class="frage">
+      <p><b>d)</b> Angenommen, eure Klasse macht einen echten Austausch mit einer Schule in Spanien.
+        Würdet ihr das hier benutzen? Was spricht dagegen?</p>
+      <div class="schreib eng"><div></div><div></div><div></div></div>
+    </div>
+    <div class="frage">
+      <p><b>e)</b> Ehrlich gefragt: Was daran wäre dir vor deinen Freundinnen und Freunden peinlich?</p>
+      <div class="schreib eng"><div></div><div></div><div></div></div>
+    </div>
+    <div class="frage">
+      <p><b>f)</b> Es darf nur <i>eine einzige</i> Sache geändert werden. Welche?</p>
+      <div class="schreib eng"><div></div></div>
+    </div>
+  </div>
+
+  <div class="fuss"><span>hey EU · Arbeitsblatt 2</span><span>Seite 3 von 3</span></div>
+</section>
+
+<!-- ============================================================
+     BLATT 3 · für die Lehrkraft
+     ============================================================ -->
+<section class="blatt">
+  <div class="kopf">
+    <span class="nr">LK</span>
+    <h1>Hinweise zur Durchführung</h1>
+    <span class="fach">nicht austeilen</span>
+  </div>
+  <p class="untertitel">Zwei Doppelstunden, oder eine Doppelstunde plus Hausaufgabe.
+    Beide Blätter funktionieren auch einzeln.</p>
+
+  <h2>Ablauf</h2>
+  <table class="versuche">
+    <tr><th class="schmal">Zeit</th><th>Was passiert</th></tr>
+    <tr><td>5 min</td><td>Adresse verteilen, Geräte öffnen. <b>Nichts erklären.</b> Nur sagen:
+      „Ihr testet etwas Unfertiges, ihr sollt Fehler finden.“</td></tr>
+    <tr><td>3 min</td><td>AB 1, Teil 1. Stoppuhr, alle gleichzeitig, danach sofort ausfüllen lassen.</td></tr>
+    <tr><td>15 min</td><td>AB 1, Teil 2. Ab hier darf gefragt und geholfen werden.</td></tr>
+    <tr><td>10 min</td><td>AB 1, Teil 3. Das gute und das schlechte Beispiel gemeinsam lesen.</td></tr>
+    <tr><td>10 min</td><td>AB 1, Teil 4. Wird meist laut — das ist in Ordnung.</td></tr>
+    <tr><td>35 min</td><td>AB 2 vollständig, möglichst zu zweit an einem Gerät.</td></tr>
+    <tr><td>10 min</td><td>Kurze Runde: je eine Sache aus AB 2, Teil 4 f) vorlesen lassen.</td></tr>
+  </table>
+
+  <div class="erklaer">
+    <b>Der eine Punkt, der wirklich zählt</b>
+    Teil 1 von AB 1 lässt sich nicht nachholen. Sobald jemand erklärt bekommen hat, wo etwas steht,
+    ist der unverstellte erste Blick weg — und genau der ist das, was eine Testklasse liefern kann
+    und sonst niemand. Deshalb wirklich zuerst, wirklich schweigend, wirklich mit Uhr.
+  </div>
+
+  <h2>Zu einzelnen Aufgaben</h2>
+  <p style="font-size:0.9rem;margin-top:0.4rem"><b>AB 1, Auftrag 1</b> — <code>Admin</code> wird vom
+    Filter abgelehnt. Wer das nicht bemerkt, hat die Rückmeldung unter dem Feld übersehen: auch das
+    ist ein verwertbares Ergebnis.</p>
+  <p style="font-size:0.9rem;margin-top:0.35rem"><b>AB 1, Teil 4</b> — die Eingabe
+    <code>&lt;b&gt;hallo&lt;/b&gt;</code> erscheint als Text, nicht als Formatierung. Falls jemand
+    fragt: Die Seite behandelt Eingaben grundsätzlich als Text und nicht als Anweisung. Genau daran
+    scheitern sonst Angriffe, bei denen jemand fremden Code einschleusen will.</p>
+  <p style="font-size:0.9rem;margin-top:0.35rem"><b>AB 2, Teil 2 d)</b> — hier wird ausdrücklich nach
+    einer Beleidigung gefragt, die durchkommt. Das vorher ansagen und dazusagen, dass die Blätter
+    eingesammelt werden. Wer die Aufgabe weglassen möchte: c) und e) funktionieren auch ohne sie.</p>
+  <p style="font-size:0.9rem;margin-top:0.35rem"><b>AB 2, Teil 2 a)</b> — die Antwort steht in zwei
+    getrennten Listen: eine wird überall im Text gesucht, die andere sperrt nur vollständige Wörter.
+    „arsch“ steht in der zweiten, deshalb bleibt „Marschkapelle“ erlaubt.</p>
+  <p style="font-size:0.9rem;margin-top:0.35rem"><b>AB 2, Teil 3 c)</b> — Zielrichtung: Wer die
+    Punkte selbst meldet, kann beliebig viele melden. Der Server muss aus dem, was jemand
+    <i>getan</i> hat, selbst ableiten, was es wert ist.</p>
+
+  <h2>Was mit den Antworten geschieht</h2>
+  <p style="font-size:0.9rem;margin-top:0.4rem">Am meisten hergeben erfahrungsgemäß drei Stellen:
+    <b>AB 1, Teil 1 c)</b> (gesucht und nicht gefunden) zeigt, was in der Führung durch die Seite
+    fehlt. <b>AB 2, Teil 4 e)</b> — die Frage nach dem Peinlichen — bekommt man von Erwachsenen nie
+    beantwortet und trifft bei Jugendlichen fast immer einen wunden Punkt. Und <b>4 f)</b> ergibt,
+    über die Klasse ausgezählt, eine Rangfolge dessen, was als Nächstes zu tun ist.</p>
+  <p style="font-size:0.9rem;margin-top:0.4rem">Für die Fehlerberichte aus AB 1, Teil 3 lohnt es
+    sich, doppelte zusammenzufassen und die Zahl der Nennungen dazuzuschreiben — was zehn Leuten
+    auffällt, ist dringender als was einem auffällt.</p>
+
+  <div class="fuss"><span>hey EU · Hinweise für die Lehrkraft</span><span>1 Seite</span></div>
+</section>
+
+<script>
+  document.getElementById('drucken').addEventListener('click', () => window.print());
+</script>
