@@ -68,4 +68,7 @@ dist/.htaccess    Apache-Einstellungen für den Webspace
 - `docs/veroeffentlichen.md` — auf die eigene Domain bringen (IONOS)
 - `docs/server-skizze.md` — Entwurf für eine Serverfassung mit mehreren Klassen
 - `docs/arbeitsblaetter.html` — zwei Arbeitsblätter für den Klassentest (Kl. 9), A4-druckfertig,
-  dazu eine Seite Durchführungshinweise; `arbeitsblaetter.pdf` ist die fertige Druckfassung
+  dazu eine Seite Durchführungshinweise
+- `docs/pdf/` — dieselben Blätter als PDF zum Versenden, einzeln aufgeteilt:
+  Arbeitsblatt 1 (2 S.), Arbeitsblatt 2 (3 S.), Hinweise für die Lehrkraft (1 S.)
+  und alles zusammen (6 S.). Neu erzeugen mit `scripts/pdf-bauen.js`.
